@@ -473,8 +473,8 @@ function itemGuideHtml(item) {
       <strong>${escapeHtml(item.label)}</strong>
       <small>${escapeHtml(item.helpText)}</small>
       <span class="report-risk-guide">
-        <span><b>低</b>${escapeHtml(item.lowGuide)}</span>
-        <span><b>高</b>${escapeHtml(item.highGuide)}</span>
+        <span><b>低</b><em>${escapeHtml(item.lowGuide)}</em></span>
+        <span><b>高</b><em>${escapeHtml(item.highGuide)}</em></span>
       </span>
     </div>
   `;

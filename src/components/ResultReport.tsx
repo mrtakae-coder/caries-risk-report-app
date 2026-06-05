@@ -153,24 +153,24 @@ export function ResultReport({ form }: ResultReportProps) {
                       {row.group}
                     </td>
                     <td className="border-r border-slate-100 px-2 py-2 text-left print:px-1 print:py-1">
-                      <span className="block font-bold leading-5 text-slate-700 print:text-[7.2px] print:leading-3">
+                      <span className="block text-[13.5px] font-black leading-[1.18] text-slate-800 print:text-[7.7px] print:leading-[1.08]">
                         {row.label}
                       </span>
-                      <span className="mt-1 block text-[11px] font-semibold leading-4 text-slate-500 print:mt-0.5 print:text-[5.9px] print:leading-[1.18]">
+                      <span className="mt-1 block text-[9.5px] font-bold leading-[1.32] text-slate-500 print:mt-0.5 print:text-[5.4px] print:leading-[1.12]">
                         {row.helpText}
                       </span>
-                      <span className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[10px] font-bold leading-4 text-slate-500 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[5.7px] print:leading-[1.18]">
+                      <span className="mt-1 flex flex-wrap gap-x-2.5 gap-y-1 text-[11.5px] font-black leading-[1.25] text-slate-700 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[6.25px] print:leading-[1.1]">
                         <span className="inline-flex items-center gap-1 print:gap-0.5">
-                          <b className="inline-flex min-h-4 min-w-5 items-center justify-center rounded-full bg-mist-100 px-1 text-[10px] text-mist-700 print:min-h-3 print:min-w-4 print:text-[5.6px]">
+                          <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-mist-100 px-1 text-[11px] text-mist-700 print:min-h-3 print:min-w-4 print:text-[6px]">
                             低
                           </b>
-                          {row.lowGuide}
+                          <em className="not-italic text-[#26374c]">{row.lowGuide}</em>
                         </span>
                         <span className="inline-flex items-center gap-1 print:gap-0.5">
-                          <b className="inline-flex min-h-4 min-w-5 items-center justify-center rounded-full bg-blossom-100 px-1 text-[10px] text-rose-700 print:min-h-3 print:min-w-4 print:text-[5.6px]">
+                          <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-blossom-100 px-1 text-[11px] text-rose-700 print:min-h-3 print:min-w-4 print:text-[6px]">
                             高
                           </b>
-                          {row.highGuide}
+                          <em className="not-italic text-[#26374c]">{row.highGuide}</em>
                         </span>
                       </span>
                     </td>
