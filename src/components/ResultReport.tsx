@@ -138,12 +138,12 @@ export function ResultReport({ form }: ResultReportProps) {
             <table className="w-full table-fixed border-collapse bg-white text-xs print:text-[8px]">
               <thead>
                 <tr className="bg-slate-50 text-slate-500">
-                  <th className="w-14 border-r border-slate-200 px-2 py-2 print:w-10 print:px-1 print:py-1">分類</th>
+                  <th className="w-14 border-r border-slate-200 px-2 py-2 print:w-9 print:px-1 print:py-1">分類</th>
                   <th className="border-r border-slate-200 px-2 py-2 text-left print:px-1 print:py-1">検査項目</th>
-                  <th className="w-36 border-r border-slate-200 px-2 py-2 print:w-28 print:px-1 print:py-1" colSpan={4}>
+                  <th className="w-32 border-r border-slate-200 px-2 py-2 print:w-24 print:px-1 print:py-1" colSpan={4}>
                     低 ← スコア → 高
                   </th>
-                  <th className="w-12 px-2 py-2 print:w-9 print:px-1 print:py-1">判定</th>
+                  <th className="w-12 px-2 py-2 print:w-8 print:px-1 print:py-1">判定</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,8 +152,27 @@ export function ResultReport({ form }: ResultReportProps) {
                     <td className="border-r border-slate-100 px-2 py-2 text-center font-bold text-slate-500 print:px-1 print:py-1">
                       {row.group}
                     </td>
-                    <td className="border-r border-slate-100 px-2 py-2 font-bold text-slate-700 print:px-1 print:py-1">
-                      {row.label}
+                    <td className="border-r border-slate-100 px-2 py-2 text-left print:px-1 print:py-1">
+                      <span className="block font-bold leading-5 text-slate-700 print:text-[7.2px] print:leading-3">
+                        {row.label}
+                      </span>
+                      <span className="mt-1 block text-[11px] font-semibold leading-4 text-slate-500 print:mt-0.5 print:text-[5.9px] print:leading-[1.18]">
+                        {row.helpText}
+                      </span>
+                      <span className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[10px] font-bold leading-4 text-slate-500 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[5.7px] print:leading-[1.18]">
+                        <span className="inline-flex items-center gap-1 print:gap-0.5">
+                          <b className="inline-flex min-h-4 min-w-5 items-center justify-center rounded-full bg-mist-100 px-1 text-[10px] text-mist-700 print:min-h-3 print:min-w-4 print:text-[5.6px]">
+                            低
+                          </b>
+                          {row.lowGuide}
+                        </span>
+                        <span className="inline-flex items-center gap-1 print:gap-0.5">
+                          <b className="inline-flex min-h-4 min-w-5 items-center justify-center rounded-full bg-blossom-100 px-1 text-[10px] text-rose-700 print:min-h-3 print:min-w-4 print:text-[5.6px]">
+                            高
+                          </b>
+                          {row.highGuide}
+                        </span>
+                      </span>
                     </td>
                     {scoreCells(row.score, row.max)}
                     <td className="px-2 py-2 text-center print:px-1 print:py-1">

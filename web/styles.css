@@ -767,7 +767,7 @@ textarea:focus {
 
 .risk-table th:nth-child(2),
 .risk-table td:nth-child(2) {
-  width: 220px;
+  width: 275px;
   text-align: left;
   font-weight: 800;
 }
@@ -803,6 +803,61 @@ textarea:focus {
   min-height: 26px;
   padding: 3px 9px;
   font-size: 12px;
+}
+
+.item-cell {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+}
+
+.item-cell strong {
+  display: block;
+  color: #243044;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.item-cell small {
+  display: block;
+  color: #647084;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.report-risk-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  color: #526175;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.report-risk-guide span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.report-risk-guide b {
+  display: inline-flex;
+  min-width: 18px;
+  min-height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #eef7f3;
+  color: var(--mint-ink);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.report-risk-guide span:last-child b {
+  background: #fde7ec;
+  color: var(--rose-ink);
 }
 
 .guidance-section {
@@ -1143,7 +1198,8 @@ textarea:focus {
 
   .risk-table th,
   .risk-table td {
-    padding: 1.55mm 1.8mm;
+    padding: 1.15mm 1.35mm;
+    line-height: 1.18;
   }
 
   .risk-table th:first-child,
@@ -1153,7 +1209,7 @@ textarea:focus {
 
   .risk-table th:nth-child(2),
   .risk-table td:nth-child(2) {
-    width: 48mm;
+    width: 66mm;
   }
 
   .risk-table th:last-child,
@@ -1162,14 +1218,44 @@ textarea:focus {
   }
 
   .score-cell {
-    width: 8.5mm;
+    width: 7mm;
   }
 
   .table-risk {
-    min-width: 8mm;
-    min-height: 6mm;
-    padding: 0.8mm 1.8mm;
-    font-size: 7.3pt;
+    min-width: 7mm;
+    min-height: 5mm;
+    padding: 0.55mm 1.2mm;
+    font-size: 6.8pt;
+  }
+
+  .item-cell {
+    gap: 0.55mm;
+  }
+
+  .item-cell strong {
+    font-size: 7.2pt;
+    line-height: 1.12;
+  }
+
+  .item-cell small {
+    font-size: 5.9pt;
+    line-height: 1.18;
+  }
+
+  .report-risk-guide {
+    gap: 0.55mm 1.5mm;
+    font-size: 5.7pt;
+    line-height: 1.18;
+  }
+
+  .report-risk-guide span {
+    gap: 0.7mm;
+  }
+
+  .report-risk-guide b {
+    min-width: 4.4mm;
+    min-height: 3.6mm;
+    font-size: 5.6pt;
   }
 
   .guidance-section {

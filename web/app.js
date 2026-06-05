@@ -16,6 +16,7 @@ const scoreItems = [
     group: "環境",
     label: "う蝕経験（DMFT）",
     max: 3,
+    helpText: "これまでのむし歯の経験から、今後の注意度をみる項目です。",
     lowGuide: "これまでのむし歯が少ない",
     highGuide: "これまでのむし歯が多い",
     low: "むし歯の経験は低リスク側の傾向です。今のケアを続けながら、定期的に確認していきましょう。",
@@ -27,6 +28,7 @@ const scoreItems = [
     group: "環境",
     label: "関連全身疾患",
     max: 2,
+    helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
     lowGuide: "体調による影響が少ない",
     highGuide: "体調やお薬の影響に注意",
     low: "体調による影響は低リスク側の傾向です。体調の変化があれば、受診時に共有してください。",
@@ -38,6 +40,7 @@ const scoreItems = [
     group: "食事",
     label: "食事内容（ラクトバチラス菌）",
     max: 3,
+    helpText: "食事内容や甘いもののとり方に関係する目安です。",
     lowGuide: "むし歯菌が増えにくい食べ方",
     highGuide: "甘いものの影響が出やすい",
     low: "食事内容によるむし歯リスクは低めの傾向です。今のリズムを続けていきましょう。",
@@ -49,6 +52,7 @@ const scoreItems = [
     group: "食事",
     label: "飲食頻度",
     max: 3,
+    helpText: "飲食の回数や、だらだら食べの影響をみる項目です。",
     lowGuide: "食べる時間がまとまっている",
     highGuide: "ちょこちょこ食べ・飲みが多い",
     low: "飲食の回数は落ち着いている傾向です。食事と間食のメリハリを続けましょう。",
@@ -60,6 +64,7 @@ const scoreItems = [
     group: "細菌",
     label: "プラーク量",
     max: 3,
+    helpText: "磨き残しの量から、清掃状態の注意度をみます。",
     lowGuide: "磨き残しが少ない",
     highGuide: "磨き残しが多い",
     low: "磨き残しは少なめの傾向です。今のセルフケアを続けていきましょう。",
@@ -71,6 +76,7 @@ const scoreItems = [
     group: "細菌",
     label: "ミュータンス菌",
     max: 3,
+    helpText: "むし歯のきっかけになりやすい菌の目安です。",
     lowGuide: "むし歯菌が少ない",
     highGuide: "むし歯菌が多い",
     low: "むし歯のきっかけになりやすい菌は落ち着いている傾向です。",
@@ -82,6 +88,7 @@ const scoreItems = [
     group: "感受性",
     label: "フッ化物プログラム",
     max: 3,
+    helpText: "フッ素で歯を守るケアをどの程度できているかの目安です。",
     lowGuide: "フッ素ケアができている",
     highGuide: "フッ素ケアを増やしたい",
     low: "フッ素ケアは低リスク側の傾向です。続けることで歯を守りやすくなります。",
@@ -93,6 +100,7 @@ const scoreItems = [
     group: "感受性",
     label: "唾液分泌速度",
     max: 3,
+    helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
     lowGuide: "唾液がしっかり出ている",
     highGuide: "お口が乾きやすい",
     low: "唾液の流れは低リスク側の傾向です。水分補給とよく噛む習慣を続けましょう。",
@@ -104,6 +112,7 @@ const scoreItems = [
     group: "感受性",
     label: "唾液緩衝能",
     max: 2,
+    helpText: "食後のお口を元の状態に戻す力の目安です。",
     lowGuide: "食後のお口が元に戻りやすい",
     highGuide: "食後のお口が酸性に傾きやすい",
     low: "食後のお口が元に戻る力は低リスク側の傾向です。",
@@ -458,6 +467,19 @@ function scoreCells(item) {
   return cells.join("");
 }
 
+function itemGuideHtml(item) {
+  return `
+    <div class="item-cell">
+      <strong>${escapeHtml(item.label)}</strong>
+      <small>${escapeHtml(item.helpText)}</small>
+      <span class="report-risk-guide">
+        <span><b>低</b>${escapeHtml(item.lowGuide)}</span>
+        <span><b>高</b>${escapeHtml(item.highGuide)}</span>
+      </span>
+    </div>
+  `;
+}
+
 function renderRiskTable() {
   document.querySelector("#risk-table").innerHTML = `
     <thead>
@@ -475,8 +497,8 @@ function renderRiskTable() {
           const level = scoreLevel(value, item.max);
           return `
             <tr>
-              <td>${item.group}</td>
-              <td>${item.label}</td>
+              <td>${escapeHtml(item.group)}</td>
+              <td>${itemGuideHtml(item)}</td>
               ${scoreCells(item)}
               <td><span class="table-risk risk-${level}">${riskLabels[level]}</span></td>
             </tr>
