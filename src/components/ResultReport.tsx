@@ -84,7 +84,7 @@ export function ResultReport({ form }: ResultReportProps) {
               ABUNDANCE DENTAL NAGOYA
             </p>
             <h1 className="mt-1 text-3xl font-bold tracking-normal text-slate-900 print:text-2xl">
-              カリエスリスク レポート
+              唾液検査結果レポート
             </h1>
           </div>
         </div>

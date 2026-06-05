@@ -27,10 +27,10 @@ export default function Home() {
                 </p>
               </div>
               <h1 className="text-3xl font-bold tracking-normal text-slate-900 sm:text-4xl">
-                カリエスリスク レポート作成
+                唾液検査結果レポート作成
               </h1>
               <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
-                カリエスリスク表の数値を入力すると、患者さんにやさしく伝わる低・中・高の判定とA4レポートを自動生成します。
+                カリエスリスク表の数値をもとに、患者さんにやさしく伝わる唾液検査結果レポートを自動生成します。
               </p>
             </div>
             <div className="flex items-center gap-3 rounded-[24px] bg-white p-4 text-sm text-slate-600 shadow-card">
