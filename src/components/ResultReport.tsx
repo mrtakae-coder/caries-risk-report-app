@@ -54,7 +54,7 @@ function memoItems(memo: ClinicalMemo) {
     ["DMFT", memo.dmft],
     ["服薬", memo.medication],
     ["PII / PCR", memo.piPcr],
-    ["フッ素ケア", memo.fluoride],
+    ["フッ化物", memo.fluoride],
     ["唾液分泌量", memo.salivaFlow],
     ["所見", memo.findings]
   ].filter(([, value]) => value.trim() !== "");

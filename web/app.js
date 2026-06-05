@@ -14,7 +14,7 @@ const scoreItems = [
   {
     key: "dmftExperience",
     group: "環境",
-    label: "これまでのむし歯（DMFT）",
+    label: "う蝕経験（DMFT）",
     max: 3,
     lowGuide: "これまでのむし歯が少ない",
     highGuide: "これまでのむし歯が多い",
@@ -25,7 +25,7 @@ const scoreItems = [
   {
     key: "systemicDisease",
     group: "環境",
-    label: "体調・お薬の影響",
+    label: "関連全身疾患",
     max: 2,
     lowGuide: "体調による影響が少ない",
     highGuide: "体調やお薬の影響に注意",
@@ -36,7 +36,7 @@ const scoreItems = [
   {
     key: "lactobacillus",
     group: "食事",
-    label: "食事内容",
+    label: "食事内容（ラクトバチラス菌）",
     max: 3,
     lowGuide: "むし歯菌が増えにくい食べ方",
     highGuide: "甘いものの影響が出やすい",
@@ -58,7 +58,7 @@ const scoreItems = [
   {
     key: "plaque",
     group: "細菌",
-    label: "磨き残し（プラーク）",
+    label: "プラーク量",
     max: 3,
     lowGuide: "磨き残しが少ない",
     highGuide: "磨き残しが多い",
@@ -69,7 +69,7 @@ const scoreItems = [
   {
     key: "mutans",
     group: "細菌",
-    label: "むし歯菌",
+    label: "ミュータンス菌",
     max: 3,
     lowGuide: "むし歯菌が少ない",
     highGuide: "むし歯菌が多い",
@@ -80,7 +80,7 @@ const scoreItems = [
   {
     key: "fluorideProgram",
     group: "感受性",
-    label: "フッ素ケア",
+    label: "フッ化物プログラム",
     max: 3,
     lowGuide: "フッ素ケアができている",
     highGuide: "フッ素ケアを増やしたい",
@@ -91,7 +91,7 @@ const scoreItems = [
   {
     key: "salivaSecretion",
     group: "感受性",
-    label: "唾液の量",
+    label: "唾液分泌速度",
     max: 3,
     lowGuide: "唾液がしっかり出ている",
     highGuide: "お口が乾きやすい",
@@ -102,7 +102,7 @@ const scoreItems = [
   {
     key: "salivaBuffering",
     group: "感受性",
-    label: "唾液の戻す力",
+    label: "唾液緩衝能",
     max: 2,
     lowGuide: "食後のお口が元に戻りやすい",
     highGuide: "食後のお口が酸性に傾きやすい",
@@ -502,7 +502,7 @@ function renderMemoSummary() {
     ["DMFT", state.dmftText],
     ["服薬", state.medication],
     ["PII / PCR", state.piPcr],
-    ["フッ素ケア", state.fluorideText],
+    ["フッ化物", state.fluorideText],
     ["唾液分泌量", state.salivaFlow],
     ["所見", state.findings]
   ].filter(([, value]) => String(value ?? "").trim() !== "");

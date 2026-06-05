@@ -25,7 +25,7 @@ const memoFields: Array<{ key: keyof ClinicalMemo; label: string; placeholder: s
   { key: "dmft", label: "DMFT", placeholder: "例）2" },
   { key: "medication", label: "服薬・種類", placeholder: "例）なし" },
   { key: "piPcr", label: "PII / PCR", placeholder: "例）PCR 18%" },
-  { key: "fluoride", label: "フッ素ケア", placeholder: "例）歯磨剤使用" },
+  { key: "fluoride", label: "フッ化物", placeholder: "例）歯磨剤使用" },
   { key: "salivaFlow", label: "唾液分泌量", placeholder: "例）1.2 ml/分" }
 ];
 

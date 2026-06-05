@@ -59,7 +59,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "dmftExperience",
     group: "環境",
-    label: "これまでのむし歯（DMFT）",
+    label: "う蝕経験（DMFT）",
     shortLabel: "DMFT",
     max: 3,
     helpText: "これまでのむし歯の経験から、今後の注意度をみる項目です。",
@@ -69,8 +69,8 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "systemicDisease",
     group: "環境",
-    label: "体調・お薬の影響",
-    shortLabel: "体調",
+    label: "関連全身疾患",
+    shortLabel: "全身",
     max: 2,
     helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
     lowGuide: "体調による影響が少ない",
@@ -79,7 +79,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "lactobacillus",
     group: "食事",
-    label: "食事内容",
+    label: "食事内容（ラクトバチラス菌）",
     shortLabel: "食事",
     max: 3,
     helpText: "食事内容や甘いもののとり方に関係する目安です。",
@@ -99,7 +99,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "plaque",
     group: "細菌",
-    label: "磨き残し（プラーク）",
+    label: "プラーク量",
     shortLabel: "プラーク",
     max: 3,
     helpText: "磨き残しの量から、清掃状態の注意度をみます。",
@@ -109,8 +109,8 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "mutans",
     group: "細菌",
-    label: "むし歯菌",
-    shortLabel: "むし歯菌",
+    label: "ミュータンス菌",
+    shortLabel: "ミュータンス",
     max: 3,
     helpText: "むし歯のきっかけになりやすい菌の目安です。",
     lowGuide: "むし歯菌が少ない",
@@ -119,8 +119,8 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "fluorideProgram",
     group: "感受性",
-    label: "フッ素ケア",
-    shortLabel: "フッ素",
+    label: "フッ化物プログラム",
+    shortLabel: "フッ化物",
     max: 3,
     helpText: "フッ素で歯を守るケアをどの程度できているかの目安です。",
     lowGuide: "フッ素ケアができている",
@@ -129,7 +129,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "salivaSecretion",
     group: "感受性",
-    label: "唾液の量",
+    label: "唾液分泌速度",
     shortLabel: "唾液量",
     max: 3,
     helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
@@ -139,8 +139,8 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "salivaBuffering",
     group: "感受性",
-    label: "唾液の戻す力",
-    shortLabel: "戻す力",
+    label: "唾液緩衝能",
+    shortLabel: "緩衝能",
     max: 2,
     helpText: "食後のお口を元の状態に戻す力の目安です。",
     lowGuide: "食後のお口が元に戻りやすい",
