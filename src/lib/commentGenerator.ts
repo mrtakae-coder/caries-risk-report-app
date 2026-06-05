@@ -86,34 +86,92 @@ export function getKeyPoints(scores: CariesScores) {
   return rows.map((row) => `${row.label}は「${row.level === "high" ? "高" : "中"}」の傾向です。${row.comment}`);
 }
 
-export function getCareAdvice(scores: CariesScores) {
+function getPatientAge(age: string) {
+  const parsed = Number(age);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function getLifeStage(age: string) {
+  const parsed = getPatientAge(age);
+  if (parsed === null) return "adult";
+  if (parsed <= 5) return "preschool";
+  if (parsed <= 12) return "schoolchild";
+  if (parsed <= 17) return "teen";
+  if (parsed >= 65) return "senior";
+  return "adult";
+}
+
+function getFluorideBaseAdvice(stage: ReturnType<typeof getLifeStage>) {
+  if (stage === "preschool") {
+    return "保護者の方が歯みがき剤の量を確認し、就寝前を含めて1日2回の歯みがきを一緒に行いましょう。うがいが難しい時期は軽く拭き取る方法も相談できます。";
+  }
+
+  if (stage === "schoolchild") {
+    return "お子さん本人の歯みがき後に、保護者の方が奥歯や歯と歯の間を確認しましょう。就寝前はすすぎを少量の水で1回にすると、フッ化物を残しやすくなります。";
+  }
+
+  if (stage === "teen") {
+    return "就寝前はイエテボリ法の考え方で、フッ化物入り歯みがき剤を使い、すすぎは少量の水で1回を目安にしましょう。";
+  }
+
+  if (stage === "senior") {
+    return "夜はイエテボリ法の考え方で、フッ化物入り歯みがき剤を歯全体に使い、根元のむし歯予防も意識しましょう。すすぎは少量の水で1回が目安です。";
+  }
+
+  return "夜はイエテボリ法の考え方で、フッ化物入り歯みがき剤を歯全体に使い、すすぎは少量の水で1回を目安にしましょう。";
+}
+
+export function getCareAdvice(scores: CariesScores, age: string) {
   const advice: string[] = [];
   const addAdvice = (text: string) => {
     if (!advice.includes(text)) advice.push(text);
   };
+  const stage = getLifeStage(age);
   const needsFluorideSupport =
     scores.fluorideProgram >= 2 || scores.dmftExperience >= 2 || scores.mutans >= 2;
 
-  addAdvice("夜の仕上げみがきはイエテボリ法を基本にしましょう。フッ化物入り歯みがき剤でみがいた後は、吐き出す程度か少量の水で1回だけすすぐ形がおすすめです。");
+  addAdvice(getFluorideBaseAdvice(stage));
 
   if (needsFluorideSupport) {
-    addAdvice("むし歯リスクに関係する項目が高めのため、フッ化物洗口剤の処方や医院でのフッ化物塗布を、生活リズムに合わせて相談しましょう。");
+    if (stage === "preschool" || stage === "schoolchild") {
+      addAdvice("むし歯リスクが高めのため、ぶくぶくうがいが安定してできるか確認し、フッ化物洗口や医院でのフッ化物塗布を相談しましょう。");
+    } else if (stage === "senior") {
+      addAdvice("根元のむし歯や乾燥が気になる場合は、フッ化物洗口剤の処方、医院でのフッ化物塗布、保湿ケアを相談しましょう。");
+    } else {
+      addAdvice("むし歯リスクが高めのため、フッ化物洗口剤の処方や医院でのフッ化物塗布を生活リズムに合わせて相談しましょう。");
+    }
   }
 
   if (scores.plaque >= 2 || scores.mutans >= 2) {
-    addAdvice("フロスや歯間ブラシで歯と歯の間を整えてから、最後にイエテボリ法でフッ化物を歯に残す流れにしましょう。");
+    if (stage === "preschool" || stage === "schoolchild") {
+      addAdvice("保護者の方が奥歯、歯と歯の間、歯ぐきの近くを確認し、必要に応じて仕上げみがきやフロスを一緒に行いましょう。");
+    } else {
+      addAdvice("歯ブラシだけでは届きにくい歯と歯の間は、フロスや歯間ブラシを使ってからフッ化物入り歯みがき剤で整えましょう。");
+    }
   }
 
   if (scores.eatingFrequency >= 2 || scores.lactobacillus >= 2) {
-    addAdvice("間食や甘い飲み物は時間を決めて楽しみ、就寝前のイエテボリ法の後は飲食を控える時間をつくりましょう。");
+    if (stage === "preschool" || stage === "schoolchild") {
+      addAdvice("おやつや甘い飲み物は時間を決め、寝る前の歯みがき後は飲食を控えられるよう、ご家庭のリズムを整えましょう。");
+    } else {
+      addAdvice("間食や甘い飲み物は時間を決めて楽しみ、就寝前のセルフケア後は飲食を控える時間をつくりましょう。");
+    }
   }
 
   if (scores.salivaSecretion >= 2 || scores.salivaBuffering >= 2) {
-    addAdvice("お口が乾きやすい日は、こまめな水分補給やよく噛む食事で唾液の働きを助けましょう。洗口剤の使い方も一緒に確認できます。");
+    if (stage === "senior") {
+      addAdvice("唾液が少なめの傾向があるため、水分補給、よく噛む食事、口の体操、保湿剤の活用を無理なく取り入れましょう。");
+    } else {
+      addAdvice("お口が乾きやすい日は、こまめな水分補給やよく噛む食事で唾液の働きを助けましょう。洗口剤の使い方も一緒に確認できます。");
+    }
   }
 
   if (scores.systemicDisease >= 1) {
-    addAdvice("体調や服薬によるお口の乾きがある場合は、フッ化物洗口剤や保湿ケアの向き不向きも含めて受診時に相談してください。");
+    if (stage === "senior") {
+      addAdvice("服薬や体調により乾燥しやすい場合は、むせやすさも含めて確認し、洗口剤・保湿ケア・清掃方法を一緒に選びましょう。");
+    } else {
+      addAdvice("体調や服薬によるお口の乾きがある場合は、フッ化物洗口剤や保湿ケアの向き不向きも含めて受診時に相談してください。");
+    }
   }
 
   if (advice.length < 4) {

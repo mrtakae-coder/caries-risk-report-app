@@ -65,7 +65,7 @@ export function ResultReport({ form }: ResultReportProps) {
   const domains = calculateDomainRisks(form.scores);
   const rows = buildResultRows(form.scores);
   const keyPoints = getKeyPoints(form.scores);
-  const advice = getCareAdvice(form.scores);
+  const advice = getCareAdvice(form.scores, form.patient.age);
   const memos = memoItems(form.memo);
   const createdDate = formatDate(new Date().toISOString().slice(0, 10));
 
@@ -93,9 +93,10 @@ export function ResultReport({ form }: ResultReportProps) {
         </p>
       </header>
 
-      <section className="grid grid-cols-2 gap-3 border-t border-slate-100 px-7 py-4 print:grid-cols-2 print:px-0 print:py-3">
+      <section className="grid grid-cols-1 gap-3 border-t border-slate-100 px-7 py-4 sm:grid-cols-3 print:grid-cols-3 print:px-0 print:py-3">
         {[
           ["カルテ番号", form.patient.chartNumber || "未入力"],
+          ["患者年齢", form.patient.age ? `${form.patient.age}歳` : "未入力"],
           ["担当衛生士", form.patient.hygienistName || "未入力"]
         ].map(([label, value]) => (
           <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3 print:rounded-lg print:p-2">

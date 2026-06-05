@@ -550,7 +550,7 @@ textarea:focus {
 
 .patient-summary {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   background: #fff;
 }
@@ -997,7 +997,7 @@ textarea:focus {
   }
 
   .patient-summary {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2.5mm;
   }
 

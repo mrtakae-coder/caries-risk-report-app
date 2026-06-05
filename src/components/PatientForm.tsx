@@ -110,6 +110,18 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="patient-age">患者年齢</Label>
+              <Input
+                id="patient-age"
+                type="number"
+                min={0}
+                max={120}
+                value={form.patient.age}
+                onChange={(event) => updatePatient("age", event.target.value)}
+                placeholder="例）35"
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="hygienist-name">担当衛生士</Label>
               <Input
                 id="hygienist-name"

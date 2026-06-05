@@ -15,6 +15,7 @@ export type CariesScoreGroup = "環境" | "食事" | "細菌" | "感受性";
 
 export type PatientInfo = {
   chartNumber: string;
+  age: string;
   hygienistName: string;
 };
 
@@ -130,6 +131,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
 export const defaultFormState: ReportFormState = {
   patient: {
     chartNumber: "000123",
+    age: "35",
     hygienistName: "佐藤"
   },
   scores: {
