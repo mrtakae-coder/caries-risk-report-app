@@ -209,31 +209,40 @@ function keyPoints() {
 }
 
 function adviceList() {
-  const advice = new Set();
+  const advice = [];
+  const addAdvice = (text) => {
+    if (!advice.includes(text)) advice.push(text);
+  };
+  const needsFluorideSupport =
+    state.fluorideProgram >= 2 || state.dmftExperience >= 2 || state.mutans >= 2;
 
-  if (state.eatingFrequency >= 2 || state.lactobacillus >= 2) {
-    advice.add("間食や甘い飲み物は時間を決めて楽しみ、飲食が長く続かないように整えましょう。");
+  addAdvice("夜の仕上げみがきはイエテボリ法を基本にしましょう。フッ化物入り歯みがき剤でみがいた後は、吐き出す程度か少量の水で1回だけすすぐ形がおすすめです。");
+
+  if (needsFluorideSupport) {
+    addAdvice("むし歯リスクに関係する項目が高めのため、フッ化物洗口剤の処方や医院でのフッ化物塗布を、生活リズムに合わせて相談しましょう。");
   }
 
   if (state.plaque >= 2 || state.mutans >= 2) {
-    advice.add("歯と歯の間、歯ぐきの境目を1日1回ていねいにケアしましょう。");
+    addAdvice("フロスや歯間ブラシで歯と歯の間を整えてから、最後にイエテボリ法でフッ化物を歯に残す流れにしましょう。");
   }
 
-  if (state.fluorideProgram >= 2 || state.dmftExperience >= 2) {
-    advice.add("フッ化物入り歯みがき剤や洗口液を、生活に合う形で取り入れていきましょう。");
+  if (state.eatingFrequency >= 2 || state.lactobacillus >= 2) {
+    addAdvice("間食や甘い飲み物は時間を決めて楽しみ、就寝前のイエテボリ法の後は飲食を控える時間をつくりましょう。");
   }
 
   if (state.salivaSecretion >= 2 || state.salivaBuffering >= 2) {
-    advice.add("こまめな水分補給と、よく噛む食事で唾液の働きをサポートしましょう。");
+    addAdvice("お口が乾きやすい日は、こまめな水分補給やよく噛む食事で唾液の働きを助けましょう。洗口剤の使い方も一緒に確認できます。");
   }
 
   if (state.systemicDisease >= 1) {
-    advice.add("体調や服薬によるお口の乾きがある場合は、受診時に気軽に相談してください。");
+    addAdvice("体調や服薬によるお口の乾きがある場合は、フッ化物洗口剤や保湿ケアの向き不向きも含めて受診時に相談してください。");
   }
 
-  advice.add("検査結果は変化します。できることから一緒に整えていきましょう。");
+  if (advice.length < 4) {
+    addAdvice("検査結果は生活習慣や体調で変化します。できることから一緒に整えていきましょう。");
+  }
 
-  return Array.from(advice).slice(0, 4);
+  return advice.slice(0, 4);
 }
 
 function renderScoreFields() {
