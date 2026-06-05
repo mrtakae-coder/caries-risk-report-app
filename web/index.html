@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>カリエスリスク レポート作成アプリ</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-topbar no-print">
+        <div class="topbar-brand">
+          <div class="brand-mark">
+            <img src="assets/abundance-logo.png" alt="アバンダンスデンタル名古屋ロゴ" />
+          </div>
+          <div>
+            <p>アバンダンスデンタル名古屋</p>
+            <h1>カリエスリスク レポート作成</h1>
+          </div>
+        </div>
+        <div class="topbar-flow" aria-label="作成ステップ">
+          <span>入力</span>
+          <i aria-hidden="true"></i>
+          <span>判定</span>
+          <i aria-hidden="true"></i>
+          <span>印刷</span>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <form class="form-panel no-print" id="patient-form">
+          <div class="panel-intro">
+            <p>患者説明用A4レポート</p>
+            <h2>検査内容を入力</h2>
+            <span>紙のカリエスリスク表に沿って、0〜3のスコアを選択してください。</span>
+          </div>
+
+          <div class="section-heading">
+            <p>Patient</p>
+            <h2>患者情報</h2>
+          </div>
+
+          <div class="field-grid patient-fields">
+            <label>
+              カルテ番号
+              <input id="chartNumber" name="chartNumber" type="text" value="000123" />
+            </label>
+            <label>
+              担当衛生士
+              <input id="hygienistName" name="hygienistName" type="text" value="佐藤" />
+            </label>
+          </div>
+
+          <div class="section-heading compact">
+            <p>Caries Risk Sheet</p>
+            <h2>検査項目スコア</h2>
+          </div>
+
+          <div class="score-help">
+            紙の表と同じく 0 が低リスク側、数字が大きいほど注意したいポイントとして判定します。
+          </div>
+          <div class="score-fields" id="score-fields"></div>
+
+          <div class="section-heading compact">
+            <p>Memo</p>
+            <h2>紙の記入欄</h2>
+          </div>
+
+          <div class="field-grid memo-fields">
+            <label>
+              DMFT
+              <input id="dmftText" name="dmftText" type="text" placeholder="例：2" />
+            </label>
+            <label>
+              服薬・種類
+              <input id="medication" name="medication" type="text" placeholder="例：なし" />
+            </label>
+            <label>
+              PII / PCR
+              <input id="piPcr" name="piPcr" type="text" placeholder="例：PCR 18%" />
+            </label>
+            <label>
+              フッ化物
+              <input id="fluorideText" name="fluorideText" type="text" placeholder="例：歯磨剤使用" />
+            </label>
+            <label>
+              唾液分泌量
+              <input id="salivaFlow" name="salivaFlow" type="text" placeholder="例：1.2 ml/分" />
+            </label>
+            <label class="wide-field">
+              その他・所見など
+              <textarea id="findings" name="findings" rows="3" placeholder="必要に応じて入力"></textarea>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="button" id="print-button">印刷する</button>
+            <button class="secondary-button" type="button" id="reset-button">初期値に戻す</button>
+          </div>
+        </form>
+
+        <section class="preview-panel">
+          <div class="preview-toolbar no-print">
+            <div>
+              <p>Report Preview</p>
+              <h2>A4印刷プレビュー</h2>
+            </div>
+            <button class="toolbar-print" type="button" id="top-print-button">印刷する</button>
+          </div>
+
+          <article class="report" id="report">
+            <div class="report-accent" aria-hidden="true"></div>
+            <header class="report-header">
+              <div class="report-brand">
+                <img src="assets/abundance-logo.png" alt="アバンダンスデンタル名古屋ロゴ" />
+                <div>
+                  <p>ABUNDANCE DENTAL NAGOYA</p>
+                  <h2>カリエスリスク レポート</h2>
+                </div>
+              </div>
+              <div class="report-date" id="report-date"></div>
+            </header>
+
+            <section class="patient-summary" id="patient-summary"></section>
+
+            <section class="overview-section">
+              <div class="overall-card" id="overall-card"></div>
+              <div class="domain-grid" id="domain-grid"></div>
+            </section>
+
+            <section class="sheet-section">
+              <div class="report-section-title">
+                <p>Score Sheet</p>
+                <h3>カリエスリスク表</h3>
+              </div>
+              <div class="risk-table-wrap">
+                <table class="risk-table" id="risk-table"></table>
+              </div>
+            </section>
+
+            <section class="guidance-section">
+              <div class="guidance-card">
+                <div class="report-section-title">
+                  <p>Key Points</p>
+                  <h3>今回のポイント</h3>
+                </div>
+                <ul class="compact-list" id="key-points"></ul>
+              </div>
+              <div class="guidance-card">
+                <div class="report-section-title">
+                  <p>Home Care</p>
+                  <h3>今日からできるケア</h3>
+                </div>
+                <ul class="compact-list" id="advice-list"></ul>
+              </div>
+            </section>
+
+            <section class="memo-summary" id="memo-summary"></section>
+
+            <footer class="report-footer">
+              検査結果は現在のお口の傾向を知るための目安です。診断を断定するものではありません。
+              気になる点は担当衛生士と一緒に確認し、できることから整えていきましょう。
+            </footer>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
