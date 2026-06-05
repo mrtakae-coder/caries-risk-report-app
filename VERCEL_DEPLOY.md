@@ -2,6 +2,14 @@
 
 ## GitHub連携で公開する方法
 
+GitHubリポジトリ:
+
+https://github.com/mrtakae-coder/caries-risk-report-app
+
+Vercelインポート用リンク:
+
+https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrtakae-coder%2Fcaries-risk-report-app&project-name=caries-risk-report-app&root-directory=web
+
 1. [Vercel](https://vercel.com/) にログインします。
 2. `Add New...` → `Project` を選びます。
 3. GitHubリポジトリ `caries-risk-report-app` を選びます。
