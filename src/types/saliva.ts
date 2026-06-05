@@ -43,6 +43,8 @@ export type ScoreDefinition = {
   shortLabel: string;
   max: 2 | 3;
   helpText: string;
+  lowGuide: string;
+  highGuide: string;
 };
 
 export type DomainRisk = {
@@ -60,7 +62,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "う蝕経験（DMFT）",
     shortLabel: "DMFT",
     max: 3,
-    helpText: "過去のむし歯経験から、今後の注意度をみる項目です。"
+    helpText: "過去のむし歯経験から、今後の注意度をみる項目です。",
+    lowGuide: "むし歯経験が少ない",
+    highGuide: "過去のむし歯経験が多い"
   },
   {
     key: "systemicDisease",
@@ -68,7 +72,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "関連全身疾患",
     shortLabel: "全身",
     max: 2,
-    helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。"
+    helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
+    lowGuide: "全身状態の影響が少ない",
+    highGuide: "体調・服薬の影響に配慮が必要"
   },
   {
     key: "lactobacillus",
@@ -76,7 +82,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "食事内容（ラクトバチラス菌）",
     shortLabel: "食事",
     max: 3,
-    helpText: "食事内容や甘いもののとり方に関係する目安です。"
+    helpText: "食事内容や甘いもののとり方に関係する目安です。",
+    lowGuide: "むし歯菌が増えにくい食習慣",
+    highGuide: "甘味・発酵性食品の影響が出やすい"
   },
   {
     key: "eatingFrequency",
@@ -84,7 +92,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "飲食頻度",
     shortLabel: "頻度",
     max: 3,
-    helpText: "飲食の回数や、だらだら食べの影響をみる項目です。"
+    helpText: "飲食の回数や、だらだら食べの影響をみる項目です。",
+    lowGuide: "飲食にメリハリがある",
+    highGuide: "だらだら食べ・飲みが多い"
   },
   {
     key: "plaque",
@@ -92,7 +102,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "プラーク量",
     shortLabel: "プラーク",
     max: 3,
-    helpText: "磨き残しの量から、清掃状態の注意度をみます。"
+    helpText: "磨き残しの量から、清掃状態の注意度をみます。",
+    lowGuide: "磨き残しが少ない",
+    highGuide: "磨き残しが多く菌が残りやすい"
   },
   {
     key: "mutans",
@@ -100,7 +112,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "ミュータンス菌",
     shortLabel: "ミュータンス",
     max: 3,
-    helpText: "むし歯のきっかけになりやすい菌の目安です。"
+    helpText: "むし歯のきっかけになりやすい菌の目安です。",
+    lowGuide: "むし歯菌が少なめ",
+    highGuide: "むし歯のきっかけ菌が多め"
   },
   {
     key: "fluorideProgram",
@@ -108,7 +122,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "フッ化物プログラム",
     shortLabel: "フッ化物",
     max: 3,
-    helpText: "フッ化物による歯の守りをどの程度活用できているかの目安です。"
+    helpText: "フッ化物による歯の守りをどの程度活用できているかの目安です。",
+    lowGuide: "フッ化物を活用できている",
+    highGuide: "フッ化物の守る力を強めたい"
   },
   {
     key: "salivaSecretion",
@@ -116,7 +132,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "唾液分泌速度",
     shortLabel: "唾液量",
     max: 3,
-    helpText: "唾液の流れやお口の乾きやすさに関係する項目です。"
+    helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
+    lowGuide: "唾液量が保たれている",
+    highGuide: "唾液が少なく乾きやすい"
   },
   {
     key: "salivaBuffering",
@@ -124,7 +142,9 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "唾液緩衝能",
     shortLabel: "緩衝能",
     max: 2,
-    helpText: "酸性に傾いたお口を元に戻す力の目安です。"
+    helpText: "酸性に傾いたお口を元に戻す力の目安です。",
+    lowGuide: "酸性から戻りやすい",
+    highGuide: "酸性状態が続きやすい"
   }
 ];
 

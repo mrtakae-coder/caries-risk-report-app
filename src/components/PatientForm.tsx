@@ -158,6 +158,12 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
                     <p className="mt-1 text-xs leading-5 text-slate-500">
                       {definition.group} / 0〜{definition.max}・{definition.helpText}
                     </p>
+                    <p className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-semibold leading-5 text-slate-500">
+                      <span className="rounded-full bg-mist-100 px-2 font-bold text-mist-700">低</span>
+                      <span>{definition.lowGuide}</span>
+                      <span className="rounded-full bg-blossom-100 px-2 font-bold text-rose-700">高</span>
+                      <span>{definition.highGuide}</span>
+                    </p>
                   </div>
                   <Input
                     id={definition.key}
