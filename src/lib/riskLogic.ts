@@ -57,7 +57,7 @@ export function calculateDomainRisks(scores: CariesScores): DomainRisk[] {
     {
       title: "生活・全身",
       keys: ["dmftExperience", "systemicDisease"],
-      description: "過去のむし歯経験や全身状態から見た目安です。"
+      description: "これまでのむし歯経験や体調から見た目安です。"
     },
     {
       title: "食事習慣",
@@ -72,7 +72,7 @@ export function calculateDomainRisks(scores: CariesScores): DomainRisk[] {
     {
       title: "唾液・防御力",
       keys: ["fluorideProgram", "salivaSecretion", "salivaBuffering"],
-      description: "フッ化物と唾液の守る力から見た目安です。"
+      description: "フッ素ケアと唾液の守る力から見た目安です。"
     }
   ] as const;
 

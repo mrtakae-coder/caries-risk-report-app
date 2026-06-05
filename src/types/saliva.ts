@@ -59,32 +59,32 @@ export const scoreDefinitions: ScoreDefinition[] = [
   {
     key: "dmftExperience",
     group: "環境",
-    label: "う蝕経験（DMFT）",
+    label: "これまでのむし歯（DMFT）",
     shortLabel: "DMFT",
     max: 3,
-    helpText: "過去のむし歯経験から、今後の注意度をみる項目です。",
-    lowGuide: "むし歯経験が少ない",
-    highGuide: "過去のむし歯経験が多い"
+    helpText: "これまでのむし歯の経験から、今後の注意度をみる項目です。",
+    lowGuide: "これまでのむし歯が少ない",
+    highGuide: "これまでのむし歯が多い"
   },
   {
     key: "systemicDisease",
     group: "環境",
-    label: "関連全身疾患",
-    shortLabel: "全身",
+    label: "体調・お薬の影響",
+    shortLabel: "体調",
     max: 2,
     helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
-    lowGuide: "全身状態の影響が少ない",
-    highGuide: "体調・服薬の影響に配慮が必要"
+    lowGuide: "体調による影響が少ない",
+    highGuide: "体調やお薬の影響に注意"
   },
   {
     key: "lactobacillus",
     group: "食事",
-    label: "食事内容（ラクトバチラス菌）",
+    label: "食事内容",
     shortLabel: "食事",
     max: 3,
     helpText: "食事内容や甘いもののとり方に関係する目安です。",
-    lowGuide: "むし歯菌が増えにくい食習慣",
-    highGuide: "甘味・発酵性食品の影響が出やすい"
+    lowGuide: "むし歯菌が増えにくい食べ方",
+    highGuide: "甘いものの影響が出やすい"
   },
   {
     key: "eatingFrequency",
@@ -93,58 +93,58 @@ export const scoreDefinitions: ScoreDefinition[] = [
     shortLabel: "頻度",
     max: 3,
     helpText: "飲食の回数や、だらだら食べの影響をみる項目です。",
-    lowGuide: "飲食にメリハリがある",
-    highGuide: "だらだら食べ・飲みが多い"
+    lowGuide: "食べる時間がまとまっている",
+    highGuide: "ちょこちょこ食べ・飲みが多い"
   },
   {
     key: "plaque",
     group: "細菌",
-    label: "プラーク量",
+    label: "磨き残し（プラーク）",
     shortLabel: "プラーク",
     max: 3,
     helpText: "磨き残しの量から、清掃状態の注意度をみます。",
     lowGuide: "磨き残しが少ない",
-    highGuide: "磨き残しが多く菌が残りやすい"
+    highGuide: "磨き残しが多い"
   },
   {
     key: "mutans",
     group: "細菌",
-    label: "ミュータンス菌",
-    shortLabel: "ミュータンス",
+    label: "むし歯菌",
+    shortLabel: "むし歯菌",
     max: 3,
     helpText: "むし歯のきっかけになりやすい菌の目安です。",
-    lowGuide: "むし歯菌が少なめ",
-    highGuide: "むし歯のきっかけ菌が多め"
+    lowGuide: "むし歯菌が少ない",
+    highGuide: "むし歯菌が多い"
   },
   {
     key: "fluorideProgram",
     group: "感受性",
-    label: "フッ化物プログラム",
-    shortLabel: "フッ化物",
+    label: "フッ素ケア",
+    shortLabel: "フッ素",
     max: 3,
-    helpText: "フッ化物による歯の守りをどの程度活用できているかの目安です。",
-    lowGuide: "フッ化物を活用できている",
-    highGuide: "フッ化物の守る力を強めたい"
+    helpText: "フッ素で歯を守るケアをどの程度できているかの目安です。",
+    lowGuide: "フッ素ケアができている",
+    highGuide: "フッ素ケアを増やしたい"
   },
   {
     key: "salivaSecretion",
     group: "感受性",
-    label: "唾液分泌速度",
+    label: "唾液の量",
     shortLabel: "唾液量",
     max: 3,
     helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
-    lowGuide: "唾液量が保たれている",
-    highGuide: "唾液が少なく乾きやすい"
+    lowGuide: "唾液がしっかり出ている",
+    highGuide: "お口が乾きやすい"
   },
   {
     key: "salivaBuffering",
     group: "感受性",
-    label: "唾液緩衝能",
-    shortLabel: "緩衝能",
+    label: "唾液の戻す力",
+    shortLabel: "戻す力",
     max: 2,
-    helpText: "酸性に傾いたお口を元に戻す力の目安です。",
-    lowGuide: "酸性から戻りやすい",
-    highGuide: "酸性状態が続きやすい"
+    helpText: "食後のお口を元の状態に戻す力の目安です。",
+    lowGuide: "食後のお口が元に戻りやすい",
+    highGuide: "食後のお口が酸性に傾きやすい"
   }
 ];
 
