@@ -4,6 +4,7 @@
 
 :root {
   color-scheme: light;
+  --print-scale: 1;
 }
 
 * {
@@ -61,10 +62,19 @@ textarea {
   }
 
   .report-page {
-    width: 194mm;
-    max-height: 281mm;
-    overflow: hidden;
+    width: calc(194mm / var(--print-scale, 1));
+    max-width: none;
+    max-height: none;
+    overflow: visible;
     background: #ffffff !important;
+    transform-origin: top left;
+    zoom: var(--print-scale, 1);
+  }
+
+  @supports not (zoom: 1) {
+    .report-page {
+      transform: scale(var(--print-scale, 1));
+    }
   }
 
   .report-page * {

@@ -10,6 +10,9 @@ const riskText = {
   high: "優先して整えたい傾向"
 };
 
+const PRINT_FIT_BASE_HEIGHT = 1800;
+const PRINT_FIT_MIN_SCALE = 0.78;
+
 const scoreItems = [
   {
     key: "dmftExperience",
@@ -331,6 +334,62 @@ function adviceList() {
   return advice.slice(0, 4);
 }
 
+function guidanceTextLength() {
+  return [...keyPoints(), ...adviceList()].join("").length;
+}
+
+function memoTextLength() {
+  return [
+    state.dmftText,
+    state.medication,
+    state.piPcr,
+    state.fluorideText,
+    state.salivaFlow,
+    state.findings
+  ].join("").length;
+}
+
+function highRiskCount() {
+  return scoreItems.filter((item) => {
+    const value = Number(state[item.key] ?? 0);
+    return scoreLevel(value, item.max) === "high";
+  }).length;
+}
+
+function printScaleForCurrentReport() {
+  const report = document.querySelector("#report");
+  const height = report?.scrollHeight || PRINT_FIT_BASE_HEIGHT;
+  const heightScale = PRINT_FIT_BASE_HEIGHT / height;
+  const highCount = highRiskCount();
+  const textLoad = guidanceTextLength() + Math.round(memoTextLength() * 0.55);
+
+  const riskScale =
+    highCount >= 8 ? 0.88 : highCount >= 5 ? 0.92 : highCount >= 3 ? 0.96 : 1;
+  const textScale =
+    textLoad >= 700 ? 0.82 : textLoad >= 520 ? 0.86 : textLoad >= 380 ? 0.9 : textLoad >= 300 ? 0.96 : 1;
+
+  return Math.max(
+    PRINT_FIT_MIN_SCALE,
+    Math.min(1, heightScale, riskScale, textScale)
+  );
+}
+
+function applyPrintFit() {
+  const scale = printScaleForCurrentReport();
+  document.documentElement.style.setProperty("--print-scale", scale.toFixed(3));
+  document.body.dataset.printScale = scale.toFixed(3);
+}
+
+function resetPrintFit() {
+  document.documentElement.style.setProperty("--print-scale", "1");
+  delete document.body.dataset.printScale;
+}
+
+function printReport() {
+  applyPrintFit();
+  requestAnimationFrame(() => window.print());
+}
+
 function renderScoreFields() {
   const groups = [...new Set(scoreItems.map((item) => item.group))];
 
@@ -595,8 +654,8 @@ function bindInputs() {
     render();
   });
 
-  document.querySelector("#print-button").addEventListener("click", () => window.print());
-  document.querySelector("#top-print-button").addEventListener("click", () => window.print());
+  document.querySelector("#print-button").addEventListener("click", printReport);
+  document.querySelector("#top-print-button").addEventListener("click", printReport);
   document.querySelector("#reset-button").addEventListener("click", () => {
     state = { ...initialState };
     renderScoreFields();
@@ -606,6 +665,9 @@ function bindInputs() {
     render();
   });
 }
+
+window.addEventListener("beforeprint", applyPrintFit);
+window.addEventListener("afterprint", resetPrintFit);
 
 renderScoreFields();
 bindInputs();
