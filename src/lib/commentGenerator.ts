@@ -103,11 +103,11 @@ function getLifeStage(age: string) {
 
 function getFluorideBaseAdvice(stage: ReturnType<typeof getLifeStage>) {
   if (stage === "preschool") {
-    return "保護者の方が歯みがき剤の量を確認し、就寝前を含めて1日2回の歯みがきを一緒に行いましょう。うがいが難しい時期は軽く拭き取る方法も相談できます。";
+    return "イエテボリ法（フッ素をお口に残すみがき方）の考え方を取り入れ、保護者の方が歯みがき剤の量を確認しましょう。うがいが難しい時期は軽く拭き取る方法も相談できます。";
   }
 
   if (stage === "schoolchild") {
-    return "お子さん本人の歯みがき後に、保護者の方が奥歯や歯と歯の間を確認しましょう。就寝前はすすぎを少量の水で1回にすると、フッ素を残しやすくなります。";
+    return "就寝前はイエテボリ法（フッ素をお口に残すみがき方）を意識し、すすぎは少量の水で1回を目安にしましょう。保護者の方が奥歯や歯と歯の間も確認しましょう。";
   }
 
   if (stage === "teen") {
