@@ -12,6 +12,9 @@ const riskText = {
 
 const PRINT_FIT_BASE_HEIGHT = 1800;
 const PRINT_FIT_MIN_SCALE = 0.78;
+const DEFAULT_DOCUMENT_TITLE = document.title;
+
+let restoreDocumentTitle = null;
 
 const scoreItems = [
   {
@@ -383,11 +386,55 @@ function applyPrintFit() {
 function resetPrintFit() {
   document.documentElement.style.setProperty("--print-scale", "1");
   delete document.body.dataset.printScale;
+  delete document.body.dataset.outputMode;
+
+  if (restoreDocumentTitle) {
+    restoreDocumentTitle();
+  }
+}
+
+function safeFilePart(value) {
+  return String(value || "未入力")
+    .trim()
+    .replace(/[\\/:*?"<>|#%&{}$!`'@+=]/g, "-")
+    .replace(/\s+/g, "-")
+    .slice(0, 48) || "未入力";
+}
+
+function reportFileName() {
+  const date = new Date().toISOString().slice(0, 10);
+  return `唾液検査結果レポート_${safeFilePart(state.chartNumber)}_${date}`;
+}
+
+function prepareOutput(mode) {
+  applyPrintFit();
+  document.body.dataset.outputMode = mode;
+
+  if (restoreDocumentTitle) {
+    restoreDocumentTitle();
+  }
+
+  if (mode === "pdf") {
+    const previousTitle = document.title || DEFAULT_DOCUMENT_TITLE;
+    document.title = reportFileName();
+    restoreDocumentTitle = () => {
+      document.title = previousTitle;
+      restoreDocumentTitle = null;
+    };
+  }
+}
+
+function openOutputDialog(mode) {
+  prepareOutput(mode);
+  requestAnimationFrame(() => window.print());
 }
 
 function printReport() {
-  applyPrintFit();
-  requestAnimationFrame(() => window.print());
+  openOutputDialog("print");
+}
+
+function savePdfReport() {
+  openOutputDialog("pdf");
 }
 
 function renderScoreFields() {
@@ -656,6 +703,8 @@ function bindInputs() {
 
   document.querySelector("#print-button").addEventListener("click", printReport);
   document.querySelector("#top-print-button").addEventListener("click", printReport);
+  document.querySelector("#pdf-button").addEventListener("click", savePdfReport);
+  document.querySelector("#top-pdf-button").addEventListener("click", savePdfReport);
   document.querySelector("#reset-button").addEventListener("click", () => {
     state = { ...initialState };
     renderScoreFields();

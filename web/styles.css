@@ -447,22 +447,32 @@ textarea:focus {
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button,
+.tertiary-button {
   min-height: 46px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 15px;
   cursor: pointer;
   font-weight: 900;
 }
 
 .primary-button {
+  border: 0;
   background: var(--navy);
   color: #fff;
   box-shadow: 0 14px 24px rgba(23, 56, 101, 0.24);
 }
 
 .secondary-button {
-  background: #eef3f7;
+  border-color: rgba(47, 128, 109, 0.18);
+  background: var(--mint);
+  color: var(--mint-ink);
+}
+
+.tertiary-button {
+  border-color: #dbe4ec;
+  background: #f5f8fb;
+  color: #526175;
   color: #506174;
 }
 
@@ -499,16 +509,34 @@ textarea:focus {
   letter-spacing: 0;
 }
 
-.toolbar-print {
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.toolbar-print,
+.toolbar-pdf {
   min-height: 40px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--navy);
-  color: #fff;
   cursor: pointer;
   padding: 0 18px;
   font-size: 13px;
   font-weight: 900;
+}
+
+.toolbar-print {
+  border: 0;
+  background: var(--navy);
+  color: #fff;
+}
+
+.toolbar-pdf {
+  border-color: rgba(47, 128, 109, 0.2);
+  background: var(--mint);
+  color: var(--mint-ink);
 }
 
 .report {

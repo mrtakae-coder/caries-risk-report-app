@@ -23,7 +23,7 @@
           <i aria-hidden="true"></i>
           <span>判定</span>
           <i aria-hidden="true"></i>
-          <span>印刷</span>
+          <span>出力</span>
         </div>
       </header>
 
@@ -99,7 +99,8 @@
 
           <div class="form-actions">
             <button class="primary-button" type="button" id="print-button">印刷する</button>
-            <button class="secondary-button" type="button" id="reset-button">初期値に戻す</button>
+            <button class="secondary-button" type="button" id="pdf-button">PDF保存</button>
+            <button class="tertiary-button" type="button" id="reset-button">初期値に戻す</button>
           </div>
         </form>
 
@@ -109,7 +110,10 @@
               <p>Report Preview</p>
               <h2>A4印刷プレビュー</h2>
             </div>
-            <button class="toolbar-print" type="button" id="top-print-button">印刷する</button>
+            <div class="toolbar-actions">
+              <button class="toolbar-print" type="button" id="top-print-button">印刷する</button>
+              <button class="toolbar-pdf" type="button" id="top-pdf-button">PDF保存</button>
+            </div>
           </div>
 
           <article class="report" id="report">

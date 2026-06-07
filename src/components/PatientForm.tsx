@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, ClipboardList, Printer, RotateCcw, UserRound } from "lucide-react";
+import { CalendarDays, ClipboardList, Download, Printer, RotateCcw, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,6 +44,32 @@ const riskLabel = {
 function clampScore(value: string, max: number) {
   const numeric = Math.round(Number(value || 0));
   return Math.max(0, Math.min(max, Number.isNaN(numeric) ? 0 : numeric));
+}
+
+function safeFilePart(value: string) {
+  return (value || "未入力")
+    .trim()
+    .replace(/[\\/:*?"<>|#%&{}$!`'@+=]/g, "-")
+    .replace(/\s+/g, "-")
+    .slice(0, 48) || "未入力";
+}
+
+function reportFileName(form: ReportFormState) {
+  const date = new Date().toISOString().slice(0, 10);
+  return `唾液検査結果レポート_${safeFilePart(form.patient.chartNumber)}_${date}`;
+}
+
+function savePdfReport(form: ReportFormState) {
+  const previousTitle = document.title;
+  document.title = reportFileName(form);
+
+  const restoreTitle = () => {
+    document.title = previousTitle;
+    window.removeEventListener("afterprint", restoreTitle);
+  };
+
+  window.addEventListener("afterprint", restoreTitle);
+  window.print();
 }
 
 export function PatientForm({ form, onChange }: PatientFormProps) {
@@ -215,6 +241,10 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
           <Button type="button" className="flex-1" onClick={() => window.print()}>
             <Printer className="h-4 w-4" aria-hidden="true" />
             印刷する
+          </Button>
+          <Button type="button" variant="secondary" className="flex-1" onClick={() => savePdfReport(form)}>
+            <Download className="h-4 w-4" aria-hidden="true" />
+            PDF保存
           </Button>
           <Button
             type="button"
