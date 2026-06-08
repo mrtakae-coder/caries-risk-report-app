@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CalendarDays, ClipboardList, Download, Printer, RotateCcw, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,42 @@ type PatientFormProps = {
   form: ReportFormState;
   onChange: (form: ReportFormState) => void;
 };
+
+type PdfWindow = Window &
+  typeof globalThis & {
+    html2canvas?: (
+      element: HTMLElement,
+      options?: {
+        backgroundColor?: string;
+        logging?: boolean;
+        scale?: number;
+        useCORS?: boolean;
+        onclone?: (document: Document) => void;
+      }
+    ) => Promise<HTMLCanvasElement>;
+    jspdf?: {
+      jsPDF: new (options: { orientation: "portrait"; unit: "mm"; format: "a4" }) => {
+        addImage: (
+          imageData: string,
+          format: "JPEG",
+          x: number,
+          y: number,
+          width: number,
+          height: number,
+          alias?: string,
+          compression?: "FAST"
+        ) => void;
+        save: (filename: string) => void;
+      };
+    };
+  };
+
+const PDF_LIBRARY_URLS = {
+  html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+  jspdf: "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
+};
+
+let pdfLibrariesPromise: Promise<void> | null = null;
 
 const memoFields: Array<{ key: keyof ClinicalMemo; label: string; placeholder: string }> = [
   { key: "dmft", label: "DMFT", placeholder: "例）2" },
@@ -59,20 +96,158 @@ function reportFileName(form: ReportFormState) {
   return `唾液検査結果レポート_${safeFilePart(form.patient.chartNumber)}_${date}`;
 }
 
-function savePdfReport(form: ReportFormState) {
-  const previousTitle = document.title;
-  document.title = reportFileName(form);
+function loadScript(src: string) {
+  return new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (existing?.dataset.loaded === "true") {
+      resolve();
+      return;
+    }
 
-  const restoreTitle = () => {
-    document.title = previousTitle;
-    window.removeEventListener("afterprint", restoreTitle);
-  };
+    if (existing) {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      return;
+    }
 
-  window.addEventListener("afterprint", restoreTitle);
-  window.print();
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.addEventListener("load", () => {
+      script.dataset.loaded = "true";
+      resolve();
+    });
+    script.addEventListener("error", reject);
+    document.head.appendChild(script);
+  });
+}
+
+function loadPdfLibraries() {
+  const browserWindow = window as PdfWindow;
+  if (browserWindow.html2canvas && browserWindow.jspdf?.jsPDF) return Promise.resolve();
+
+  pdfLibrariesPromise ??= Promise.all([
+    loadScript(PDF_LIBRARY_URLS.html2canvas),
+    loadScript(PDF_LIBRARY_URLS.jspdf)
+  ]).then(() => {
+    if (!browserWindow.html2canvas || !browserWindow.jspdf?.jsPDF) {
+      throw new Error("PDF library failed to initialize");
+    }
+  });
+
+  return pdfLibrariesPromise;
+}
+
+async function waitForReportAssets(report: HTMLElement) {
+  await document.fonts?.ready;
+
+  await Promise.all(
+    [...report.querySelectorAll("img")].map((image) => {
+      if (image.complete && image.naturalWidth > 0) return Promise.resolve();
+      return new Promise<void>((resolve) => {
+        image.addEventListener("load", () => resolve(), { once: true });
+        image.addEventListener("error", () => resolve(), { once: true });
+      });
+    })
+  );
+}
+
+function printCssAsScreenCss() {
+  let css = "";
+
+  [...document.styleSheets].forEach((sheet) => {
+    try {
+      [...sheet.cssRules].forEach((rule) => {
+        if (rule.type === CSSRule.MEDIA_RULE && (rule as CSSMediaRule).conditionText.includes("print")) {
+          css += [...(rule as CSSMediaRule).cssRules].map((childRule) => childRule.cssText).join("\n");
+          css += "\n";
+        }
+      });
+    } catch {
+      // Cross-origin stylesheets are ignored; app CSS is same-origin.
+    }
+  });
+
+  return css;
+}
+
+async function savePdfReport(form: ReportFormState) {
+  const report = document.querySelector<HTMLElement>(".report-page");
+  if (!report) return;
+
+  const browserWindow = window as PdfWindow;
+  document.body.dataset.outputMode = "pdf-download";
+
+  try {
+    await loadPdfLibraries();
+    await waitForReportAssets(report);
+
+    const canvas = await browserWindow.html2canvas?.(report, {
+      backgroundColor: "#ffffff",
+      logging: false,
+      scale: Math.min(2, window.devicePixelRatio || 2),
+      useCORS: true,
+      onclone: (clonedDocument) => {
+        clonedDocument.documentElement.style.setProperty("--print-scale", "1");
+        const style = clonedDocument.createElement("style");
+        style.textContent = `
+          ${printCssAsScreenCss()}
+          html,
+          body,
+          main {
+            width: auto !important;
+            min-height: auto !important;
+            background: #ffffff !important;
+          }
+          .report-page {
+            margin: 0 !important;
+          }
+        `;
+        clonedDocument.head.appendChild(style);
+      }
+    });
+
+    if (!canvas || !browserWindow.jspdf?.jsPDF) throw new Error("PDF render failed");
+
+    const { jsPDF } = browserWindow.jspdf;
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 8;
+    const maxWidth = pageWidth - margin * 2;
+    const maxHeight = pageHeight - margin * 2;
+
+    let imageWidth = maxWidth;
+    let imageHeight = (canvas.height * imageWidth) / canvas.width;
+
+    if (imageHeight > maxHeight) {
+      imageHeight = maxHeight;
+      imageWidth = (canvas.width * imageHeight) / canvas.height;
+    }
+
+    pdf.addImage(
+      canvas.toDataURL("image/jpeg", 0.98),
+      "JPEG",
+      (pageWidth - imageWidth) / 2,
+      margin,
+      imageWidth,
+      imageHeight,
+      undefined,
+      "FAST"
+    );
+    pdf.save(`${reportFileName(form)}.pdf`);
+  } catch (error) {
+    console.error(error);
+    alert("PDFの直接保存に失敗しました。インターネット接続を確認するか、「印刷する」からPDF保存を選んでください。");
+  } finally {
+    delete document.body.dataset.outputMode;
+  }
 }
 
 export function PatientForm({ form, onChange }: PatientFormProps) {
+  const [isSavingPdf, setIsSavingPdf] = useState(false);
+
   const updatePatient = (key: keyof PatientInfo, value: string) => {
     onChange({
       ...form,
@@ -242,9 +417,19 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
             <Printer className="h-4 w-4" aria-hidden="true" />
             印刷する
           </Button>
-          <Button type="button" variant="secondary" className="flex-1" onClick={() => savePdfReport(form)}>
+          <Button
+            type="button"
+            variant="secondary"
+            className="flex-1"
+            disabled={isSavingPdf}
+            onClick={async () => {
+              setIsSavingPdf(true);
+              await savePdfReport(form);
+              setIsSavingPdf(false);
+            }}
+          >
             <Download className="h-4 w-4" aria-hidden="true" />
-            PDF保存
+            {isSavingPdf ? "PDF作成中..." : "PDF保存"}
           </Button>
           <Button
             type="button"

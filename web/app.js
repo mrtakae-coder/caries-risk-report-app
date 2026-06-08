@@ -13,8 +13,13 @@ const riskText = {
 const PRINT_FIT_BASE_HEIGHT = 1800;
 const PRINT_FIT_MIN_SCALE = 0.78;
 const DEFAULT_DOCUMENT_TITLE = document.title;
+const PDF_LIBRARY_URLS = {
+  html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+  jspdf: "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
+};
 
 let restoreDocumentTitle = null;
+let pdfLibrariesPromise = null;
 
 const scoreItems = [
   {
@@ -406,6 +411,157 @@ function reportFileName() {
   return `唾液検査結果レポート_${safeFilePart(state.chartNumber)}_${date}`;
 }
 
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      if (existing.dataset.loaded === "true") resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.addEventListener("load", () => {
+      script.dataset.loaded = "true";
+      resolve();
+    });
+    script.addEventListener("error", reject);
+    document.head.appendChild(script);
+  });
+}
+
+function loadPdfLibraries() {
+  if (window.html2canvas && window.jspdf?.jsPDF) {
+    return Promise.resolve();
+  }
+
+  if (!pdfLibrariesPromise) {
+    pdfLibrariesPromise = Promise.all([
+      loadScript(PDF_LIBRARY_URLS.html2canvas),
+      loadScript(PDF_LIBRARY_URLS.jspdf)
+    ]).then(() => {
+      if (!window.html2canvas || !window.jspdf?.jsPDF) {
+        throw new Error("PDF library failed to initialize");
+      }
+    });
+  }
+
+  return pdfLibrariesPromise;
+}
+
+function setPdfBusy(isBusy) {
+  document.querySelectorAll("#pdf-button, #top-pdf-button").forEach((button) => {
+    button.disabled = isBusy;
+    button.textContent = isBusy ? "PDF作成中..." : "PDF保存";
+  });
+}
+
+async function waitForReportAssets(report) {
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
+
+  await Promise.all(
+    [...report.querySelectorAll("img")].map((image) => {
+      if (image.complete && image.naturalWidth > 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        image.addEventListener("load", resolve, { once: true });
+        image.addEventListener("error", resolve, { once: true });
+      });
+    })
+  );
+}
+
+function printCssAsScreenCss() {
+  let css = "";
+
+  [...document.styleSheets].forEach((sheet) => {
+    try {
+      [...sheet.cssRules].forEach((rule) => {
+        if (rule.type === CSSRule.MEDIA_RULE && rule.conditionText.includes("print")) {
+          css += [...rule.cssRules].map((childRule) => childRule.cssText).join("\n");
+          css += "\n";
+        }
+      });
+    } catch {
+      // Cross-origin stylesheets are ignored; local app CSS is same-origin.
+    }
+  });
+
+  return css;
+}
+
+async function downloadPdfReport() {
+  const report = document.querySelector("#report");
+  if (!report) return;
+
+  setPdfBusy(true);
+  document.body.dataset.outputMode = "pdf-download";
+
+  try {
+    await loadPdfLibraries();
+    await waitForReportAssets(report);
+
+    const printCss = printCssAsScreenCss();
+    const canvas = await window.html2canvas(report, {
+      backgroundColor: "#ffffff",
+      logging: false,
+      scale: Math.min(2, window.devicePixelRatio || 2),
+      useCORS: true,
+      onclone: (clonedDocument) => {
+        clonedDocument.documentElement.style.setProperty("--print-scale", "1");
+        const style = clonedDocument.createElement("style");
+        style.textContent = `
+          ${printCss}
+          html,
+          body {
+            width: auto !important;
+            min-height: auto !important;
+            background: #ffffff !important;
+          }
+          #report {
+            margin: 0 !important;
+          }
+        `;
+        clonedDocument.head.appendChild(style);
+      }
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 8;
+    const maxWidth = pageWidth - margin * 2;
+    const maxHeight = pageHeight - margin * 2;
+
+    let imageWidth = maxWidth;
+    let imageHeight = (canvas.height * imageWidth) / canvas.width;
+
+    if (imageHeight > maxHeight) {
+      imageHeight = maxHeight;
+      imageWidth = (canvas.width * imageHeight) / canvas.height;
+    }
+
+    const x = (pageWidth - imageWidth) / 2;
+    const y = margin;
+    const imageData = canvas.toDataURL("image/jpeg", 0.98);
+
+    pdf.addImage(imageData, "JPEG", x, y, imageWidth, imageHeight, undefined, "FAST");
+    pdf.save(`${reportFileName()}.pdf`);
+  } catch (error) {
+    console.error(error);
+    alert("PDFの直接保存に失敗しました。インターネット接続を確認するか、「印刷する」からPDF保存を選んでください。");
+  } finally {
+    delete document.body.dataset.outputMode;
+    setPdfBusy(false);
+  }
+}
+
 function prepareOutput(mode) {
   applyPrintFit();
   document.body.dataset.outputMode = mode;
@@ -434,7 +590,7 @@ function printReport() {
 }
 
 function savePdfReport() {
-  openOutputDialog("pdf");
+  downloadPdfReport();
 }
 
 function renderScoreFields() {
