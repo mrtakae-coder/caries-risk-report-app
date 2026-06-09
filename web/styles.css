@@ -1344,31 +1344,31 @@ textarea:focus {
   .report-header {
     flex-direction: row;
     align-items: flex-start;
-    padding: 5mm 0 4mm;
+    padding: 2.4mm 0 2mm;
     background: #fff;
   }
 
   .report-brand {
-    gap: 4mm;
+    gap: 2.4mm;
   }
 
   .report-brand img {
-    width: 17mm;
-    height: 17mm;
+    width: 12mm;
+    height: 12mm;
   }
 
   .report-brand p,
   .report-date {
-    font-size: 7pt;
+    font-size: 6.1pt;
   }
 
   .report-brand h2 {
-    font-size: 19pt;
+    font-size: 16pt;
   }
 
   .report section,
   .report-footer {
-    padding: 3.5mm 0;
+    padding: 1.45mm 0;
   }
 
   .patient-summary {
@@ -1377,22 +1377,22 @@ textarea:focus {
   }
 
   .summary-item {
-    min-height: 13mm;
-    padding: 2.5mm;
+    min-height: 8.8mm;
+    padding: 1.4mm;
     border-radius: 3mm;
   }
 
   .summary-item span {
-    font-size: 6.8pt;
+    font-size: 5.8pt;
   }
 
   .summary-item strong {
-    font-size: 10pt;
+    font-size: 8.8pt;
   }
 
   .overview-section {
     grid-template-columns: 1fr 1.45fr;
-    gap: 3mm;
+    gap: 1.8mm;
   }
 
   .overall-card,
@@ -1402,7 +1402,7 @@ textarea:focus {
   }
 
   .overall-card {
-    padding: 4mm;
+    padding: 2.2mm;
   }
 
   .overall-main h3 {
@@ -1410,22 +1410,22 @@ textarea:focus {
   }
 
   .overall-level {
-    font-size: 22pt;
+    font-size: 18pt;
   }
 
   .score-ring {
-    width: 18mm;
-    height: 18mm;
+    width: 15mm;
+    height: 15mm;
     border-width: 1.3mm;
   }
 
   .score-ring span {
-    font-size: 15pt;
+    font-size: 12pt;
   }
 
   .score-ring small {
     margin-top: -5mm;
-    font-size: 6.5pt;
+    font-size: 5.2pt;
   }
 
   .meter {
@@ -1440,73 +1440,74 @@ textarea:focus {
 
   .domain-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.3mm;
+    gap: 1.2mm;
   }
 
   .domain-card {
-    min-height: 22mm;
-    padding: 3mm;
+    min-height: 15.5mm;
+    padding: 1.8mm;
   }
 
   .domain-level {
-    top: 2.6mm;
-    right: 2.6mm;
-    width: 8mm;
-    height: 8mm;
-    font-size: 7.5pt;
+    top: 1.7mm;
+    right: 1.7mm;
+    width: 6.5mm;
+    height: 6.5mm;
+    font-size: 5.8pt;
   }
 
   .domain-card h4 {
-    font-size: 8.4pt;
+    font-size: 7pt;
   }
 
   .domain-card p {
-    margin: 1.6mm 0 0.8mm;
-    font-size: 11pt;
+    margin: 0.7mm 0 0.1mm;
+    font-size: 9pt;
   }
 
   .domain-card small {
-    font-size: 6.8pt;
+    font-size: 5.45pt;
+    line-height: 1.15;
   }
 
   .dmft-reference-card {
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: 3mm;
-    padding: 3mm;
+    grid-template-columns: 0.86fr 1.14fr;
+    gap: 1.6mm;
+    padding: 1.6mm;
     border-radius: 4mm;
   }
 
   .dmft-reference-copy h3 {
-    margin: 1mm 0 2mm;
-    font-size: 9.6pt;
+    margin: 0.3mm 0 0.8mm;
+    font-size: 8pt;
   }
 
   .dmft-stat-grid {
-    gap: 1.4mm;
+    gap: 0.9mm;
   }
 
   .dmft-stat-grid div {
-    min-height: 10mm;
-    padding: 1.6mm;
+    min-height: 6.8mm;
+    padding: 0.8mm;
     border-radius: 2.5mm;
   }
 
   .dmft-stat-grid span {
-    font-size: 5.5pt;
+    font-size: 4.9pt;
   }
 
   .dmft-stat-grid strong {
-    font-size: 8.2pt;
+    font-size: 7.1pt;
   }
 
   .dmft-reference-note {
-    margin-top: 1.5mm;
-    font-size: 6.4pt;
-    line-height: 1.35;
+    margin-top: 0.7mm;
+    font-size: 5.45pt;
+    line-height: 1.15;
   }
 
   .dmft-chart-svg {
-    height: 25mm;
+    height: 14.5mm;
   }
 
   .dmft-average-line {
@@ -1523,23 +1524,23 @@ textarea:focus {
 
   .dmft-legend {
     gap: 2mm;
-    font-size: 5.8pt;
+    font-size: 5pt;
   }
 
   .dmft-chart-wrap small {
-    font-size: 5.3pt;
+    font-size: 4.8pt;
   }
 
   .report-section-title {
-    margin-bottom: 2mm;
+    margin-bottom: 1mm;
   }
 
   .report-section-title p {
-    font-size: 6.6pt;
+    font-size: 5.5pt;
   }
 
   .report-section-title h3 {
-    font-size: 10.5pt;
+    font-size: 8.4pt;
   }
 
   .risk-table-wrap {
@@ -1547,13 +1548,13 @@ textarea:focus {
   }
 
   .risk-table {
-    font-size: 7.3pt;
+    font-size: 6.45pt;
   }
 
   .risk-table th,
   .risk-table td {
-    padding: 1.15mm 1.35mm;
-    line-height: 1.18;
+    padding: 0.5mm 0.75mm;
+    line-height: 1.04;
   }
 
   .risk-table .group-column,
@@ -1576,41 +1577,41 @@ textarea:focus {
   }
 
   .score-cell-content {
-    gap: 0.35mm;
+    gap: 0.2mm;
   }
 
   .score-color-marker.table-marker {
     max-width: 9.2mm;
-    min-height: 3mm;
-    padding: 0.2mm 0.5mm;
-    font-size: 5pt;
+    min-height: 2.4mm;
+    padding: 0.15mm 0.4mm;
+    font-size: 4.35pt;
   }
 
   .table-risk {
     min-width: 7mm;
-    min-height: 5mm;
-    padding: 0.55mm 1.2mm;
-    font-size: 6.8pt;
+    min-height: 3.9mm;
+    padding: 0.3mm 0.8mm;
+    font-size: 5.6pt;
   }
 
   .item-cell {
-    gap: 0.45mm;
+    gap: 0.2mm;
   }
 
   .item-cell strong {
-    font-size: 7.7pt;
-    line-height: 1.08;
+    font-size: 6.5pt;
+    line-height: 1.02;
   }
 
   .item-cell small {
-    font-size: 5.4pt;
-    line-height: 1.12;
+    font-size: 4.8pt;
+    line-height: 1.02;
   }
 
   .report-risk-guide {
-    gap: 0.45mm 1.4mm;
-    font-size: 6.25pt;
-    line-height: 1.1;
+    gap: 0.25mm 1mm;
+    font-size: 5.2pt;
+    line-height: 1.02;
   }
 
   .report-risk-guide span {
@@ -1619,53 +1620,55 @@ textarea:focus {
 
   .report-risk-guide b {
     min-width: 4.6mm;
-    min-height: 3.8mm;
-    font-size: 6pt;
+    min-height: 3.2mm;
+    font-size: 5pt;
   }
 
   .guidance-section {
     grid-template-columns: 1fr 1fr;
-    gap: 3mm;
+    gap: 1.5mm;
   }
 
   .guidance-card {
-    padding: 3.4mm;
+    padding: 1.7mm;
   }
 
   .compact-list {
-    gap: 1.8mm;
+    gap: 0.7mm;
   }
 
   .compact-list li {
-    padding-left: 4mm;
-    font-size: 7.8pt;
+    padding-left: 2.8mm;
+    font-size: 6.15pt;
+    line-height: 1.14;
   }
 
   .compact-list li::before {
     top: 0.55em;
-    width: 2mm;
-    height: 2mm;
+    width: 1.5mm;
+    height: 1.5mm;
   }
 
   .memo-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 2mm;
+    gap: 1mm;
   }
 
   .memo-grid div {
-    padding: 2mm;
+    padding: 0.9mm;
     border-radius: 2.5mm;
   }
 
   .memo-grid span {
-    font-size: 6.3pt;
+    font-size: 5pt;
   }
 
   .memo-grid strong {
-    font-size: 7.3pt;
+    font-size: 6pt;
+    line-height: 1.1;
   }
 
   .report-footer {
-    font-size: 7.1pt;
+    font-size: 5.8pt;
   }
 }

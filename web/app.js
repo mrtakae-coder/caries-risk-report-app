@@ -10,8 +10,8 @@ const riskText = {
   high: "優先して整えたい傾向"
 };
 
-const PRINT_FIT_BASE_HEIGHT = 1800;
-const PRINT_FIT_MIN_SCALE = 0.78;
+const PRINT_FIT_BASE_HEIGHT = 2600;
+const PRINT_FIT_MIN_SCALE = 0.82;
 const DEFAULT_DOCUMENT_TITLE = document.title;
 const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
@@ -429,9 +429,9 @@ function printScaleForCurrentReport() {
   const textLoad = guidanceTextLength() + Math.round(memoTextLength() * 0.55);
 
   const riskScale =
-    highCount >= 8 ? 0.88 : highCount >= 5 ? 0.92 : highCount >= 3 ? 0.96 : 1;
+    highCount >= 8 ? 0.98 : highCount >= 5 ? 0.99 : 1;
   const textScale =
-    textLoad >= 700 ? 0.82 : textLoad >= 520 ? 0.86 : textLoad >= 380 ? 0.9 : textLoad >= 300 ? 0.96 : 1;
+    textLoad >= 1200 ? 0.9 : textLoad >= 900 ? 0.94 : textLoad >= 700 ? 0.97 : 1;
 
   return Math.max(
     PRINT_FIT_MIN_SCALE,
