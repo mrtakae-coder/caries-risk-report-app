@@ -17,6 +17,27 @@ const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
   jspdf: "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
 };
+const DMFT_REFERENCE_SOURCE = "厚生労働省 令和6年歯科疾患実態調査 表9・10";
+const DMFT_REFERENCE_DATA = [
+  { label: "5歳", min: 5, max: 5, average: 0.0 },
+  { label: "6歳", min: 6, max: 6, average: 0.0 },
+  { label: "7歳", min: 7, max: 7, average: 0.0 },
+  { label: "8歳", min: 8, max: 8, average: 0.5 },
+  { label: "9歳", min: 9, max: 9, average: 0.0 },
+  { label: "10歳", min: 10, max: 10, average: 0.4 },
+  { label: "11歳", min: 11, max: 11, average: 0.2 },
+  { label: "12歳", min: 12, max: 12, average: 0.6 },
+  { label: "13歳", min: 13, max: 13, average: 2.0 },
+  { label: "14歳", min: 14, max: 14, average: 1.3 },
+  { label: "15-24歳", min: 15, max: 24, average: 2.8 },
+  { label: "25-34歳", min: 25, max: 34, average: 5.3 },
+  { label: "35-44歳", min: 35, max: 44, average: 9.2 },
+  { label: "45-54歳", min: 45, max: 54, average: 12.6 },
+  { label: "55-64歳", min: 55, max: 64, average: 15.9 },
+  { label: "65-74歳", min: 65, max: 74, average: 18.1 },
+  { label: "75-84歳", min: 75, max: 84, average: 19.9 },
+  { label: "85歳-", min: 85, max: 120, average: 22.7 }
+];
 
 let restoreDocumentTitle = null;
 let pdfLibrariesPromise = null;
@@ -27,6 +48,7 @@ const scoreItems = [
     group: "環境",
     label: "う蝕経験（DMFT）",
     max: 3,
+    includeInOverall: false,
     helpText: "これまでのむし歯の経験から、今後の注意度をみる項目です。",
     lowGuide: "これまでのむし歯が少ない",
     highGuide: "これまでのむし歯が多い",
@@ -39,6 +61,7 @@ const scoreItems = [
     group: "環境",
     label: "関連全身疾患",
     max: 2,
+    includeInOverall: false,
     helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
     lowGuide: "体調による影響が少ない",
     highGuide: "体調やお薬の影響に注意",
@@ -122,7 +145,13 @@ const scoreItems = [
     key: "salivaBuffering",
     group: "感受性",
     label: "唾液緩衝能",
-    max: 2,
+    max: 3,
+    scoreLabels: [
+      { score: 0, label: "即青", tone: "quick-blue" },
+      { score: 1, label: "ゆっくり青", tone: "slow-blue" },
+      { score: 2, label: "緑", tone: "green" },
+      { score: 3, label: "黄", tone: "yellow" }
+    ],
     helpText: "食後のお口を元の状態に戻す力の目安です。",
     lowGuide: "食後のお口が元に戻りやすい",
     highGuide: "食後のお口が酸性に傾きやすい",
@@ -170,12 +199,16 @@ function scoreLevel(score, max) {
   return score >= 2 ? "high" : "medium";
 }
 
+function overallScoreItems() {
+  return scoreItems.filter((item) => item.includeInOverall !== false);
+}
+
 function totalScore() {
-  return scoreItems.reduce((total, item) => total + Number(state[item.key] ?? 0), 0);
+  return overallScoreItems().reduce((total, item) => total + Number(state[item.key] ?? 0), 0);
 }
 
 function maxScore() {
-  return scoreItems.reduce((total, item) => total + item.max, 0);
+  return overallScoreItems().reduce((total, item) => total + item.max, 0);
 }
 
 function levelFromRatio(score, max) {
@@ -226,9 +259,33 @@ function selectedComment(item) {
   return item[scoreLevel(Number(state[item.key] ?? 0), item.max)];
 }
 
+function scoreLabelFor(item, score) {
+  return item.scoreLabels?.find((marker) => marker.score === score);
+}
+
 function patientAgeNumber() {
   const age = Number(state.patientAge);
   return Number.isFinite(age) && age >= 0 ? age : null;
+}
+
+function normalizeNumericText(value) {
+  return String(value ?? "").replace(/[０-９．]/g, (character) => {
+    if (character === "．") return ".";
+    return String.fromCharCode(character.charCodeAt(0) - 0xfee0);
+  });
+}
+
+function patientDmftValue() {
+  const match = normalizeNumericText(state.dmftText).match(/\d+(?:\.\d+)?/);
+  if (!match) return null;
+
+  const value = Number(match[0]);
+  return Number.isFinite(value) ? Math.max(0, Math.min(32, value)) : null;
+}
+
+function dmftReferenceForAge(age) {
+  if (age === null) return null;
+  return DMFT_REFERENCE_DATA.find((item) => age >= item.min && age <= item.max) ?? null;
 }
 
 function lifeStage() {
@@ -613,21 +670,27 @@ function renderScoreFields() {
                 const level = scoreLevel(value, item.max);
                 const buttons = Array.from({ length: item.max + 1 }, (_, score) => {
                   const isSelected = score === value;
+                  const marker = scoreLabelFor(item, score);
                   return `
                     <button
-                      class="score-button ${isSelected ? "selected" : ""}"
+                      class="score-button ${marker ? "has-marker" : ""} ${isSelected ? "selected" : ""}"
                       type="button"
                       data-key="${item.key}"
                       data-score="${score}"
                       aria-pressed="${isSelected}"
                     >
-                      ${score}
+                      <span class="score-button-number">${score}</span>
+                      ${
+                        marker
+                          ? `<span class="score-color-marker tone-${marker.tone}">${escapeHtml(marker.label)}</span>`
+                          : ""
+                      }
                     </button>
                   `;
                 }).join("");
 
                 return `
-                  <div class="score-field">
+                  <div class="score-field ${item.scoreLabels ? "with-score-markers" : ""}">
                     <div class="score-copy">
                       <strong>${item.label}</strong>
                       <small>${item.group} / 0〜${item.max}</small>
@@ -636,7 +699,7 @@ function renderScoreFields() {
                         <b>高</b>${item.highGuide}
                       </span>
                     </div>
-                    <div class="score-control" aria-label="${item.label}のスコア">
+                    <div class="score-control ${item.scoreLabels ? "has-markers" : ""}" aria-label="${item.label}のスコア">
                       ${buttons}
                     </div>
                     <em class="mini-risk risk-${level}">${riskLabels[level]}</em>
@@ -694,7 +757,7 @@ function renderOverall() {
     <div class="meter" aria-hidden="true">
       <i style="width: ${percent}%"></i>
     </div>
-    <p>${riskText[level]}です。数値が高い項目から、できることを一緒に整えていきましょう。</p>
+    <p>${riskText[level]}です。食事・細菌・感受性の21点満点で見た目安です。</p>
   `;
 
   document.querySelector("#domain-grid").innerHTML = domainRisks()
@@ -711,6 +774,93 @@ function renderOverall() {
     .join("");
 }
 
+function dmftReferenceSvg(reference, patientDmft) {
+  const width = 560;
+  const height = 112;
+  const padding = { top: 14, right: 14, bottom: 24, left: 24 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  const maxValue = Math.max(28, patientDmft !== null ? Math.ceil(patientDmft + 2) : 28);
+  const xStep = chartWidth / (DMFT_REFERENCE_DATA.length - 1);
+  const x = (index) => padding.left + index * xStep;
+  const y = (value) => padding.top + chartHeight - (Math.min(value, maxValue) / maxValue) * chartHeight;
+  const points = DMFT_REFERENCE_DATA.map((item, index) => `${x(index).toFixed(1)},${y(item.average).toFixed(1)}`).join(" ");
+  const referenceIndex = reference ? DMFT_REFERENCE_DATA.indexOf(reference) : -1;
+  const referenceX = referenceIndex >= 0 ? x(referenceIndex) : null;
+  const patientY = patientDmft !== null ? y(patientDmft) : null;
+
+  return `
+    <svg class="dmft-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="DMFT全国平均と今回の位置">
+      <line class="dmft-axis" x1="${padding.left}" y1="${padding.top + chartHeight}" x2="${width - padding.right}" y2="${padding.top + chartHeight}" />
+      <line class="dmft-axis" x1="${padding.left}" y1="${y(10)}" x2="${width - padding.right}" y2="${y(10)}" />
+      <line class="dmft-axis" x1="${padding.left}" y1="${y(20)}" x2="${width - padding.right}" y2="${y(20)}" />
+      <polyline class="dmft-average-line" points="${points}" />
+      ${DMFT_REFERENCE_DATA.map((item, index) => `
+        <circle class="dmft-average-dot ${reference === item ? "selected" : ""}" cx="${x(index).toFixed(1)}" cy="${y(item.average).toFixed(1)}" r="${reference === item ? 4.4 : 2.4}" />
+      `).join("")}
+      ${
+        referenceX !== null
+          ? `<line class="dmft-selected-guide" x1="${referenceX.toFixed(1)}" y1="${padding.top}" x2="${referenceX.toFixed(1)}" y2="${padding.top + chartHeight}" />`
+          : ""
+      }
+      ${
+        referenceX !== null && patientY !== null
+          ? `<path class="dmft-patient-marker" d="M ${referenceX.toFixed(1)} ${(patientY - 6).toFixed(1)} L ${(referenceX + 6).toFixed(1)} ${patientY.toFixed(1)} L ${referenceX.toFixed(1)} ${(patientY + 6).toFixed(1)} L ${(referenceX - 6).toFixed(1)} ${patientY.toFixed(1)} Z" />`
+          : ""
+      }
+      <text class="dmft-axis-label" x="${padding.left}" y="${height - 5}">5歳</text>
+      <text class="dmft-axis-label" x="${width - padding.right}" y="${height - 5}" text-anchor="end">85歳-</text>
+      ${referenceX !== null ? `<text class="dmft-axis-label selected" x="${referenceX.toFixed(1)}" y="${height - 5}" text-anchor="middle">${escapeHtml(reference.label)}</text>` : ""}
+      <text class="dmft-axis-label" x="4" y="${y(10).toFixed(1)}">10</text>
+      <text class="dmft-axis-label" x="4" y="${y(20).toFixed(1)}">20</text>
+    </svg>
+  `;
+}
+
+function renderDmftReference() {
+  const age = patientAgeNumber();
+  const reference = dmftReferenceForAge(age);
+  const patientDmft = patientDmftValue();
+  const comparisonText =
+    reference && patientDmft !== null
+      ? patientDmft <= reference.average
+        ? "同年代平均より低めです。今のケアを続けていきましょう。"
+        : "同年代平均より高めです。過去の治療部位も含めて、再発しにくい環境づくりを意識しましょう。"
+      : "年齢と紙の記入欄DMFTを入力すると、今回の位置が表示されます。";
+
+  document.querySelector("#dmft-reference").innerHTML = `
+    <div class="dmft-reference-card">
+      <div class="dmft-reference-copy">
+        <p class="eyebrow">DMFT Reference</p>
+        <h3>日本人のDMFT平均と今回の位置</h3>
+        <div class="dmft-stat-grid">
+          <div>
+            <span>年齢帯</span>
+            <strong>${reference ? escapeHtml(reference.label) : "未判定"}</strong>
+          </div>
+          <div>
+            <span>全国平均</span>
+            <strong>${reference ? `${reference.average.toFixed(1)}本` : "-"}</strong>
+          </div>
+          <div>
+            <span>今回のDMFT</span>
+            <strong>${patientDmft !== null ? `${patientDmft.toFixed(1)}本` : "未入力"}</strong>
+          </div>
+        </div>
+        <p class="dmft-reference-note">${escapeHtml(comparisonText)}</p>
+      </div>
+      <div class="dmft-chart-wrap">
+        ${dmftReferenceSvg(reference, patientDmft)}
+        <div class="dmft-legend">
+          <span><i class="average"></i>全国平均</span>
+          <span><i class="patient"></i>今回のDMFT</span>
+        </div>
+        <small>出典: ${DMFT_REFERENCE_SOURCE}</small>
+      </div>
+    </div>
+  `;
+}
+
 function scoreCells(item) {
   const value = Number(state[item.key] ?? 0);
   const cells = [];
@@ -722,7 +872,16 @@ function scoreCells(item) {
     }
 
     cells.push(
-      `<td class="score-cell ${value === score ? "selected" : ""}">${score}</td>`
+      `<td class="score-cell ${value === score ? "selected" : ""}">
+        <span class="score-cell-content">
+          <span>${score}</span>
+          ${
+            scoreLabelFor(item, score)
+              ? `<span class="score-color-marker table-marker tone-${scoreLabelFor(item, score).tone}">${escapeHtml(scoreLabelFor(item, score).label)}</span>`
+              : ""
+          }
+        </span>
+      </td>`
     );
   }
 
@@ -743,28 +902,41 @@ function itemGuideHtml(item) {
 }
 
 function renderRiskTable() {
+  const groupedItems = [...new Set(scoreItems.map((item) => item.group))].map((group) => ({
+    group,
+    items: scoreItems.filter((item) => item.group === group)
+  }));
+
   document.querySelector("#risk-table").innerHTML = `
     <thead>
       <tr>
-        <th>分類</th>
-        <th>検査項目</th>
-        <th colspan="4">低リスク ← スコア → 高リスク</th>
-        <th>判定</th>
+        <th class="group-column">分類</th>
+        <th class="item-column">検査項目</th>
+        <th class="score-column" colspan="4">低リスク ← スコア → 高リスク</th>
+        <th class="risk-column">判定</th>
       </tr>
     </thead>
     <tbody>
-      ${scoreItems
-        .map((item) => {
-          const value = Number(state[item.key] ?? 0);
-          const level = scoreLevel(value, item.max);
-          return `
-            <tr>
-              <td>${escapeHtml(item.group)}</td>
-              <td>${itemGuideHtml(item)}</td>
-              ${scoreCells(item)}
-              <td><span class="table-risk risk-${level}">${riskLabels[level]}</span></td>
-            </tr>
-          `;
+      ${groupedItems
+        .map(({ group, items }) => {
+          return items
+            .map((item, index) => {
+              const value = Number(state[item.key] ?? 0);
+              const level = scoreLevel(value, item.max);
+              return `
+                <tr>
+                  ${
+                    index === 0
+                      ? `<td class="group-cell" rowspan="${items.length}">${escapeHtml(group)}</td>`
+                      : ""
+                  }
+                  <td class="item-data">${itemGuideHtml(item)}</td>
+                  ${scoreCells(item)}
+                  <td class="risk-cell"><span class="table-risk risk-${level}">${riskLabels[level]}</span></td>
+                </tr>
+              `;
+            })
+            .join("");
         })
         .join("")}
     </tbody>
@@ -821,6 +993,7 @@ function renderMemoSummary() {
 function render() {
   renderPatientSummary();
   renderOverall();
+  renderDmftReference();
   renderRiskTable();
   renderGuidance();
   renderMemoSummary();

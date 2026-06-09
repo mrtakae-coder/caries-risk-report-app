@@ -317,6 +317,20 @@ textarea:focus {
   border-bottom: 0;
 }
 
+.score-field.with-score-markers {
+  grid-template-columns: minmax(0, 1fr) 38px;
+}
+
+.score-field.with-score-markers .score-control {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.score-field.with-score-markers .mini-risk {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .score-copy {
   display: grid;
   gap: 2px;
@@ -370,6 +384,11 @@ textarea:focus {
   background: #f7fafb;
 }
 
+.score-control.has-markers {
+  align-items: stretch;
+  border-radius: 18px;
+}
+
 .score-button {
   display: inline-grid;
   width: 32px;
@@ -382,6 +401,19 @@ textarea:focus {
   cursor: pointer;
   font-size: 13px;
   font-weight: 900;
+}
+
+.score-button.has-marker {
+  width: 58px;
+  height: 50px;
+  align-content: center;
+  gap: 2px;
+  border-radius: 14px;
+  line-height: 1;
+}
+
+.score-button-number {
+  display: block;
 }
 
 .score-button.selected {
@@ -755,6 +787,163 @@ textarea:focus {
   line-height: 1.45;
 }
 
+.dmft-reference-section {
+  background: #fbfdfe;
+}
+
+.dmft-reference-card {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.82fr) 1.18fr;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #dde9ef;
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(246, 251, 251, 0.9)),
+    #fff;
+}
+
+.dmft-reference-copy h3 {
+  margin: 5px 0 10px;
+  color: #17283e;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.dmft-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.dmft-stat-grid div {
+  min-height: 48px;
+  padding: 8px 9px;
+  border: 1px solid #e5edf2;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.dmft-stat-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.dmft-stat-grid strong {
+  display: block;
+  margin-top: 2px;
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.dmft-reference-note {
+  margin: 9px 0 0;
+  color: #526274;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.dmft-chart-wrap {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.dmft-chart-svg {
+  width: 100%;
+  height: 112px;
+  overflow: visible;
+}
+
+.dmft-axis {
+  stroke: #e5edf2;
+  stroke-width: 1;
+}
+
+.dmft-average-line {
+  fill: none;
+  stroke: #6b879d;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.dmft-average-dot {
+  fill: #fff;
+  stroke: #6b879d;
+  stroke-width: 2;
+}
+
+.dmft-average-dot.selected {
+  fill: #dff5e7;
+  stroke: var(--mint-ink);
+  stroke-width: 2.5;
+}
+
+.dmft-selected-guide {
+  stroke: rgba(23, 56, 101, 0.18);
+  stroke-dasharray: 4 4;
+}
+
+.dmft-patient-marker {
+  fill: #d8b260;
+  stroke: #8c6420;
+  stroke-width: 1.8;
+}
+
+.dmft-axis-label {
+  fill: #6c7a8c;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.dmft-axis-label.selected {
+  fill: var(--navy);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.dmft-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #647084;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.dmft-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dmft-legend i {
+  display: inline-block;
+  width: 13px;
+  height: 7px;
+  border-radius: 999px;
+}
+
+.dmft-legend .average {
+  background: #6b879d;
+}
+
+.dmft-legend .patient {
+  background: #d8b260;
+}
+
+.dmft-chart-wrap small {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
 .report-section-title {
   margin-bottom: 10px;
 }
@@ -789,13 +978,21 @@ textarea:focus {
   font-weight: 900;
 }
 
-.risk-table th:first-child,
-.risk-table td:first-child {
+.risk-table .group-column,
+.risk-table .group-cell {
   width: 58px;
 }
 
-.risk-table th:nth-child(2),
-.risk-table td:nth-child(2) {
+.risk-table .group-cell {
+  background: #fbfdfe;
+  color: #536579;
+  font-weight: 900;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.risk-table .item-column,
+.risk-table .item-data {
   width: 275px;
   text-align: left;
   font-weight: 800;
@@ -805,8 +1002,8 @@ textarea:focus {
   border-bottom: 0;
 }
 
-.risk-table th:last-child,
-.risk-table td:last-child {
+.risk-table .risk-column,
+.risk-table .risk-cell {
   width: 58px;
   border-right: 0;
 }
@@ -817,6 +1014,12 @@ textarea:focus {
   font-weight: 900;
 }
 
+.score-cell-content {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
 .score-cell.selected {
   background: var(--navy);
   color: #fff;
@@ -825,6 +1028,48 @@ textarea:focus {
 .score-cell.muted {
   color: #c8d1da;
   background: #f8fafb;
+}
+
+.score-color-marker {
+  display: inline-flex;
+  max-width: 54px;
+  min-height: 16px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.score-color-marker.table-marker {
+  max-width: 48px;
+  min-height: 15px;
+  padding-inline: 4px;
+  font-size: 8.8px;
+}
+
+.tone-quick-blue {
+  background: #d9ecff;
+  color: #125a9f;
+}
+
+.tone-slow-blue {
+  background: #edf6ff;
+  color: #2f6f9f;
+}
+
+.tone-green {
+  background: #dff5e7;
+  color: #277a4f;
+}
+
+.tone-yellow {
+  background: #fff2b8;
+  color: #946200;
 }
 
 .table-risk {
@@ -1028,8 +1273,12 @@ textarea:focus {
     width: 100%;
   }
 
-  .risk-table th:nth-child(2),
-  .risk-table td:nth-child(2) {
+  .score-button.has-marker {
+    width: 100%;
+  }
+
+  .risk-table .item-column,
+  .risk-table .item-data {
     width: auto;
   }
 }
@@ -1220,6 +1469,67 @@ textarea:focus {
     font-size: 6.8pt;
   }
 
+  .dmft-reference-card {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 3mm;
+    padding: 3mm;
+    border-radius: 4mm;
+  }
+
+  .dmft-reference-copy h3 {
+    margin: 1mm 0 2mm;
+    font-size: 9.6pt;
+  }
+
+  .dmft-stat-grid {
+    gap: 1.4mm;
+  }
+
+  .dmft-stat-grid div {
+    min-height: 10mm;
+    padding: 1.6mm;
+    border-radius: 2.5mm;
+  }
+
+  .dmft-stat-grid span {
+    font-size: 5.5pt;
+  }
+
+  .dmft-stat-grid strong {
+    font-size: 8.2pt;
+  }
+
+  .dmft-reference-note {
+    margin-top: 1.5mm;
+    font-size: 6.4pt;
+    line-height: 1.35;
+  }
+
+  .dmft-chart-svg {
+    height: 25mm;
+  }
+
+  .dmft-average-line {
+    stroke-width: 2;
+  }
+
+  .dmft-axis-label {
+    font-size: 5.5pt;
+  }
+
+  .dmft-axis-label.selected {
+    font-size: 6.2pt;
+  }
+
+  .dmft-legend {
+    gap: 2mm;
+    font-size: 5.8pt;
+  }
+
+  .dmft-chart-wrap small {
+    font-size: 5.3pt;
+  }
+
   .report-section-title {
     margin-bottom: 2mm;
   }
@@ -1246,23 +1556,34 @@ textarea:focus {
     line-height: 1.18;
   }
 
-  .risk-table th:first-child,
-  .risk-table td:first-child {
+  .risk-table .group-column,
+  .risk-table .group-cell {
     width: 12mm;
   }
 
-  .risk-table th:nth-child(2),
-  .risk-table td:nth-child(2) {
+  .risk-table .item-column,
+  .risk-table .item-data {
     width: 66mm;
   }
 
-  .risk-table th:last-child,
-  .risk-table td:last-child {
+  .risk-table .risk-column,
+  .risk-table .risk-cell {
     width: 12mm;
   }
 
   .score-cell {
-    width: 7mm;
+    width: 9.6mm;
+  }
+
+  .score-cell-content {
+    gap: 0.35mm;
+  }
+
+  .score-color-marker.table-marker {
+    max-width: 9.2mm;
+    min-height: 3mm;
+    padding: 0.2mm 0.5mm;
+    font-size: 5pt;
   }
 
   .table-risk {
