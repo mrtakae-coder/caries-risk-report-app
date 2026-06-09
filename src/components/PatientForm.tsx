@@ -78,6 +78,71 @@ const riskLabel = {
   high: "高"
 };
 
+const scoreToneClass = {
+  quickBlue: "border-sky-300 bg-sky-100 text-sky-800",
+  slowBlue: "border-cyan-300 bg-cyan-50 text-cyan-800",
+  green: "border-emerald-300 bg-emerald-100 text-emerald-800",
+  yellow: "border-amber-300 bg-amber-100 text-amber-800"
+};
+
+const colonyDots = [
+  [24, 24, 1.8, 0.8],
+  [39, 20, 1.5, 0.65],
+  [32, 29, 1.4, 0.72],
+  [47, 27, 1.7, 0.78],
+  [18, 31, 1.3, 0.58],
+  [51, 18, 1.2, 0.56],
+  [29, 17, 1.2, 0.5],
+  [42, 33, 1.4, 0.66],
+  [21, 18, 1.2, 0.52],
+  [55, 30, 1.3, 0.62],
+  [34, 35, 1.6, 0.74],
+  [15, 24, 1.2, 0.5],
+  [46, 13, 1.3, 0.62],
+  [28, 38, 1.1, 0.52],
+  [59, 23, 1.2, 0.5],
+  [37, 14, 1.1, 0.54],
+  [23, 34, 1.2, 0.55],
+  [50, 36, 1.1, 0.52],
+  [17, 14, 1.1, 0.48],
+  [57, 15, 1.1, 0.48],
+  [31, 22, 2.1, 0.85],
+  [44, 24, 2.2, 0.88],
+  [36, 27, 2.0, 0.82],
+  [26, 28, 1.9, 0.78],
+  [53, 26, 1.9, 0.8],
+  [40, 38, 1.8, 0.72],
+  [22, 12, 1.6, 0.65],
+  [60, 34, 1.7, 0.7],
+  [13, 31, 1.5, 0.62],
+  [48, 40, 1.5, 0.62],
+  [33, 11, 1.4, 0.6],
+  [55, 10, 1.3, 0.55],
+  [12, 19, 1.3, 0.55],
+  [62, 21, 1.2, 0.52]
+] as const;
+
+const colonyDotCounts = [1, 7, 17, 34] as const;
+
+function ColonyPlate({ score }: { score: number }) {
+  return (
+    <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className="h-10 w-14">
+      <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(23,56,101,0.12)" />
+      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#fdfefe" stroke="#c9d8e2" strokeWidth={1.5} />
+      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#fff6df" stroke="rgba(216,178,96,0.35)" />
+      {score === 3 ? (
+        <path
+          d="M18 28c5-9 18-13 29-10 8 2 13 7 12 12-2 7-13 9-24 8-9-1-19-3-17-10Z"
+          fill="rgba(188,106,79,0.16)"
+        />
+      ) : null}
+      {colonyDots.slice(0, colonyDotCounts[score as 0 | 1 | 2 | 3] ?? colonyDotCounts[0]).map(([cx, cy, radius, opacity], index) => (
+        <circle key={`${score}-${index}`} cx={cx} cy={cy} r={radius} opacity={opacity} fill="#bc6a4f" />
+      ))}
+    </svg>
+  );
+}
+
 function clampScore(value: string, max: number) {
   const numeric = Math.round(Number(value || 0));
   return Math.max(0, Math.min(max, Number.isNaN(numeric) ? 0 : numeric));
@@ -348,11 +413,14 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
           <div className="grid gap-3">
             {scoreDefinitions.map((definition) => {
               const level = getItemRiskLevel(definition.key, form.scores);
+              const showsColonyScale = definition.key === "lactobacillus";
 
               return (
                 <div
                   key={definition.key}
-                  className="grid grid-cols-[1fr_76px_44px] items-center gap-3 rounded-3xl border border-slate-100 bg-slate-50/70 p-4"
+                  className={`grid items-center gap-3 rounded-3xl border border-slate-100 bg-slate-50/70 p-4 ${
+                    showsColonyScale ? "grid-cols-[1fr_44px]" : "grid-cols-[1fr_76px_44px]"
+                  }`}
                 >
                   <div>
                     <Label htmlFor={definition.key}>{definition.label}</Label>
@@ -365,17 +433,57 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
                       <span className="rounded-full bg-blossom-100 px-2 font-bold text-rose-700">高</span>
                       <span>{definition.highGuide}</span>
                     </p>
+                    {definition.scoreLabels ? (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {definition.scoreLabels.map((marker) => (
+                          <span
+                            key={`${definition.key}-${marker.score}`}
+                            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-black ${scoreToneClass[marker.tone]}`}
+                          >
+                            <b>{marker.score}</b>
+                            {marker.label}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    {showsColonyScale ? (
+                      <div className="mt-3 grid grid-cols-4 gap-2 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-rose-50/40 p-2">
+                        {Array.from({ length: definition.max + 1 }, (_, score) => {
+                          const isSelected = form.scores[definition.key] === score;
+
+                          return (
+                            <button
+                              key={`${definition.key}-${score}`}
+                              type="button"
+                              aria-pressed={isSelected}
+                              aria-label={`${definition.label} ${score}点`}
+                              onClick={() => updateScore(definition.key, String(score), definition.max)}
+                              className={`grid min-h-[76px] place-items-center rounded-2xl border px-1 py-2 text-sm font-black transition ${
+                                isSelected
+                                  ? "border-[#173865] bg-[#173865] text-white shadow-sm"
+                                  : "border-transparent bg-white/85 text-slate-600 hover:border-slate-200"
+                              }`}
+                            >
+                              <ColonyPlate score={score} />
+                              <span>{score}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
                   </div>
-                  <Input
-                    id={definition.key}
-                    type="number"
-                    min={0}
-                    max={definition.max}
-                    step={1}
-                    value={form.scores[definition.key]}
-                    onChange={(event) => updateScore(definition.key, event.target.value, definition.max)}
-                    className="text-center font-bold"
-                  />
+                  {showsColonyScale ? null : (
+                    <Input
+                      id={definition.key}
+                      type="number"
+                      min={0}
+                      max={definition.max}
+                      step={1}
+                      value={form.scores[definition.key]}
+                      onChange={(event) => updateScore(definition.key, event.target.value, definition.max)}
+                      className="text-center font-bold"
+                    />
+                  )}
                   <span className={`rounded-full px-3 py-2 text-center text-sm font-bold ${riskToneClass[level]}`}>
                     {riskLabel[level]}
                   </span>

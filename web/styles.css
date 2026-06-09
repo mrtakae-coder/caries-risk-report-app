@@ -321,12 +321,26 @@ textarea:focus {
   grid-template-columns: minmax(0, 1fr) 38px;
 }
 
+.score-field.with-colony-scale {
+  grid-template-columns: minmax(0, 1fr) 38px;
+}
+
 .score-field.with-score-markers .score-control {
   grid-column: 1 / -1;
   justify-self: start;
 }
 
+.score-field.with-colony-scale .score-control {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
 .score-field.with-score-markers .mini-risk {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.score-field.with-colony-scale .mini-risk {
   grid-column: 2;
   grid-row: 1;
 }
@@ -389,6 +403,16 @@ textarea:focus {
   border-radius: 18px;
 }
 
+.score-control.has-colonies {
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(62px, 1fr));
+  grid-auto-flow: initial;
+  gap: 7px;
+  padding: 7px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f8fbfc, #fff7f9);
+}
+
 .score-button {
   display: inline-grid;
   width: 32px;
@@ -412,8 +436,76 @@ textarea:focus {
   line-height: 1;
 }
 
+.score-button.colony-button {
+  width: 100%;
+  height: 78px;
+  align-content: center;
+  gap: 3px;
+  padding: 5px 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+  line-height: 1;
+}
+
+.score-button.colony-button.selected {
+  border-color: rgba(23, 56, 101, 0.1);
+  background: #173865;
+}
+
 .score-button-number {
   display: block;
+}
+
+.score-button.colony-button .score-button-number {
+  font-size: 13px;
+}
+
+.colony-plate {
+  display: grid;
+  place-items: center;
+}
+
+.colony-plate svg {
+  width: 58px;
+  height: 40px;
+  display: block;
+}
+
+.colony-dish-shadow {
+  fill: rgba(23, 56, 101, 0.12);
+}
+
+.colony-dish {
+  fill: #fdfefe;
+  stroke: #c9d8e2;
+  stroke-width: 1.5;
+}
+
+.colony-medium {
+  fill: #fff6df;
+  stroke: rgba(216, 178, 96, 0.35);
+  stroke-width: 1;
+}
+
+.colony-density {
+  fill: rgba(188, 106, 79, 0.16);
+}
+
+.colony-dot {
+  fill: #bc6a4f;
+}
+
+.score-button.selected .colony-dish {
+  stroke: rgba(255, 255, 255, 0.86);
+}
+
+.score-button.selected .colony-medium {
+  fill: #fff8df;
+}
+
+.score-button.selected .colony-dot {
+  fill: #a95340;
 }
 
 .score-button.selected {
@@ -1298,6 +1390,18 @@ textarea:focus {
 
   .score-button.has-marker {
     width: 100%;
+  }
+
+  .score-control.has-colonies {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .score-button.colony-button {
+    min-width: 0;
+  }
+
+  .colony-plate svg {
+    width: min(58px, 100%);
   }
 
   .risk-table .item-column,

@@ -263,6 +263,72 @@ function scoreLabelFor(item, score) {
   return item.scoreLabels?.find((marker) => marker.score === score);
 }
 
+function isLactobacillusItem(item) {
+  return item.key === "lactobacillus";
+}
+
+function colonyPlateSvg(score) {
+  const colonyDots = [
+    [24, 24, 1.8, 0.8],
+    [39, 20, 1.5, 0.65],
+    [32, 29, 1.4, 0.72],
+    [47, 27, 1.7, 0.78],
+    [18, 31, 1.3, 0.58],
+    [51, 18, 1.2, 0.56],
+    [29, 17, 1.2, 0.5],
+    [42, 33, 1.4, 0.66],
+    [21, 18, 1.2, 0.52],
+    [55, 30, 1.3, 0.62],
+    [34, 35, 1.6, 0.74],
+    [15, 24, 1.2, 0.5],
+    [46, 13, 1.3, 0.62],
+    [28, 38, 1.1, 0.52],
+    [59, 23, 1.2, 0.5],
+    [37, 14, 1.1, 0.54],
+    [23, 34, 1.2, 0.55],
+    [50, 36, 1.1, 0.52],
+    [17, 14, 1.1, 0.48],
+    [57, 15, 1.1, 0.48],
+    [31, 22, 2.1, 0.85],
+    [44, 24, 2.2, 0.88],
+    [36, 27, 2.0, 0.82],
+    [26, 28, 1.9, 0.78],
+    [53, 26, 1.9, 0.8],
+    [40, 38, 1.8, 0.72],
+    [22, 12, 1.6, 0.65],
+    [60, 34, 1.7, 0.7],
+    [13, 31, 1.5, 0.62],
+    [48, 40, 1.5, 0.62],
+    [33, 11, 1.4, 0.6],
+    [55, 10, 1.3, 0.55],
+    [12, 19, 1.3, 0.55],
+    [62, 21, 1.2, 0.52]
+  ];
+  const dotCounts = [1, 7, 17, 34];
+  const dots = colonyDots.slice(0, dotCounts[score] ?? dotCounts[0]);
+
+  return `
+    <span class="colony-plate" aria-hidden="true">
+      <svg viewBox="0 0 74 50" focusable="false">
+        <ellipse class="colony-dish-shadow" cx="37" cy="42" rx="26" ry="3.6" />
+        <ellipse class="colony-dish" cx="37" cy="25" rx="30" ry="19" />
+        <ellipse class="colony-medium" cx="37" cy="25" rx="25" ry="15" />
+        ${
+          score === 3
+            ? `<path class="colony-density" d="M18 28c5-9 18-13 29-10 8 2 13 7 12 12-2 7-13 9-24 8-9-1-19-3-17-10Z" />`
+            : ""
+        }
+        ${dots
+          .map(
+            ([cx, cy, radius, opacity]) =>
+              `<circle class="colony-dot" cx="${cx}" cy="${cy}" r="${radius}" opacity="${opacity}" />`
+          )
+          .join("")}
+      </svg>
+    </span>
+  `;
+}
+
 function patientAgeNumber() {
   const age = Number(state.patientAge);
   return Number.isFinite(age) && age >= 0 ? age : null;
@@ -668,20 +734,23 @@ function renderScoreFields() {
               .map((item) => {
                 const value = Number(state[item.key] ?? 0);
                 const level = scoreLevel(value, item.max);
+                const hasColonies = isLactobacillusItem(item);
                 const buttons = Array.from({ length: item.max + 1 }, (_, score) => {
                   const isSelected = score === value;
                   const marker = scoreLabelFor(item, score);
                   return `
                     <button
-                      class="score-button ${marker ? "has-marker" : ""} ${isSelected ? "selected" : ""}"
+                      class="score-button ${marker ? "has-marker" : ""} ${hasColonies ? "colony-button" : ""} ${isSelected ? "selected" : ""}"
                       type="button"
                       data-key="${item.key}"
                       data-score="${score}"
                       aria-pressed="${isSelected}"
+                      aria-label="${item.label} ${score}点"
                     >
+                      ${hasColonies ? colonyPlateSvg(score) : ""}
                       <span class="score-button-number">${score}</span>
                       ${
-                        marker
+                        marker && !hasColonies
                           ? `<span class="score-color-marker tone-${marker.tone}">${escapeHtml(marker.label)}</span>`
                           : ""
                       }
@@ -690,7 +759,7 @@ function renderScoreFields() {
                 }).join("");
 
                 return `
-                  <div class="score-field ${item.scoreLabels ? "with-score-markers" : ""}">
+                  <div class="score-field ${item.scoreLabels ? "with-score-markers" : ""} ${hasColonies ? "with-colony-scale" : ""}">
                     <div class="score-copy">
                       <strong>${item.label}</strong>
                       <small>${item.group} / 0〜${item.max}</small>
@@ -699,7 +768,7 @@ function renderScoreFields() {
                         <b>高</b>${item.highGuide}
                       </span>
                     </div>
-                    <div class="score-control ${item.scoreLabels ? "has-markers" : ""}" aria-label="${item.label}のスコア">
+                    <div class="score-control ${item.scoreLabels ? "has-markers" : ""} ${hasColonies ? "has-colonies" : ""}" aria-label="${item.label}のスコア">
                       ${buttons}
                     </div>
                     <em class="mini-risk risk-${level}">${riskLabels[level]}</em>
