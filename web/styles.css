@@ -1140,6 +1140,19 @@ textarea:focus {
   color: #fff;
 }
 
+.report-colony-cell {
+  padding-block: 4px;
+}
+
+.report-colony-cell .score-cell-content {
+  gap: 1px;
+}
+
+.report-colony-cell .colony-plate svg {
+  width: 34px;
+  height: 23px;
+}
+
 .score-cell.muted {
   color: #c8d1da;
   background: #f8fafb;
@@ -1711,6 +1724,15 @@ textarea:focus {
 
   .score-cell-content {
     gap: 0.2mm;
+  }
+
+  .report-colony-cell {
+    padding-block: 0.25mm;
+  }
+
+  .report-colony-cell .colony-plate svg {
+    width: 7.2mm;
+    height: 4.8mm;
   }
 
   .score-color-marker.table-marker {

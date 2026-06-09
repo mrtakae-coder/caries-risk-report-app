@@ -953,6 +953,7 @@ function renderDmftReference() {
 function scoreCells(item) {
   const value = Number(state[item.key] ?? 0);
   const cells = [];
+  const hasColonies = isLactobacillusItem(item);
 
   for (let score = 0; score <= 3; score += 1) {
     if (score > item.max) {
@@ -961,11 +962,12 @@ function scoreCells(item) {
     }
 
     cells.push(
-      `<td class="score-cell ${value === score ? "selected" : ""}">
+      `<td class="score-cell ${hasColonies ? "report-colony-cell" : ""} ${value === score ? "selected" : ""}">
         <span class="score-cell-content">
+          ${hasColonies ? colonyPlateSvg(score) : ""}
           <span>${score}</span>
           ${
-            scoreLabelFor(item, score)
+            scoreLabelFor(item, score) && !hasColonies
               ? `<span class="score-color-marker table-marker tone-${scoreLabelFor(item, score).tone}">${escapeHtml(scoreLabelFor(item, score).label)}</span>`
               : ""
           }
