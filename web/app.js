@@ -775,28 +775,49 @@ function renderOverall() {
 }
 
 function dmftReferenceSvg(reference, patientDmft) {
-  const width = 560;
-  const height = 112;
-  const padding = { top: 14, right: 14, bottom: 24, left: 24 };
+  const width = 420;
+  const height = 156;
+  const padding = { top: 18, right: 18, bottom: 30, left: 34 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
-  const maxValue = Math.max(28, patientDmft !== null ? Math.ceil(patientDmft + 2) : 28);
+  const highestAverage = Math.max(...DMFT_REFERENCE_DATA.map((item) => item.average));
+  const highestValue = Math.max(highestAverage, patientDmft !== null ? patientDmft : 0);
+  const maxValue = Math.max(24, Math.min(32, Math.ceil((highestValue + 1) / 4) * 4));
+  const gridValues = [0, Math.round(maxValue / 2), maxValue];
   const xStep = chartWidth / (DMFT_REFERENCE_DATA.length - 1);
   const x = (index) => padding.left + index * xStep;
   const y = (value) => padding.top + chartHeight - (Math.min(value, maxValue) / maxValue) * chartHeight;
-  const points = DMFT_REFERENCE_DATA.map((item, index) => `${x(index).toFixed(1)},${y(item.average).toFixed(1)}`).join(" ");
+  const pointPairs = DMFT_REFERENCE_DATA.map((item, index) => ({
+    x: x(index),
+    y: y(item.average)
+  }));
+  const points = pointPairs.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
+  const areaPath = [
+    `M ${pointPairs[0].x.toFixed(1)} ${(padding.top + chartHeight).toFixed(1)}`,
+    ...pointPairs.map((point) => `L ${point.x.toFixed(1)} ${point.y.toFixed(1)}`),
+    `L ${pointPairs[pointPairs.length - 1].x.toFixed(1)} ${(padding.top + chartHeight).toFixed(1)}`,
+    "Z"
+  ].join(" ");
   const referenceIndex = reference ? DMFT_REFERENCE_DATA.indexOf(reference) : -1;
   const referenceX = referenceIndex >= 0 ? x(referenceIndex) : null;
   const patientY = patientDmft !== null ? y(patientDmft) : null;
 
   return `
     <svg class="dmft-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="DMFT全国平均と今回の位置">
+      <rect class="dmft-chart-bg" x="1" y="1" width="${width - 2}" height="${height - 2}" rx="18" />
+      ${gridValues
+        .map(
+          (value) => `
+            <line class="dmft-grid" x1="${padding.left}" y1="${y(value).toFixed(1)}" x2="${width - padding.right}" y2="${y(value).toFixed(1)}" />
+            <text class="dmft-axis-label dmft-y-label" x="${padding.left - 8}" y="${(y(value) + 3).toFixed(1)}" text-anchor="end">${value}</text>
+          `
+        )
+        .join("")}
       <line class="dmft-axis" x1="${padding.left}" y1="${padding.top + chartHeight}" x2="${width - padding.right}" y2="${padding.top + chartHeight}" />
-      <line class="dmft-axis" x1="${padding.left}" y1="${y(10)}" x2="${width - padding.right}" y2="${y(10)}" />
-      <line class="dmft-axis" x1="${padding.left}" y1="${y(20)}" x2="${width - padding.right}" y2="${y(20)}" />
+      <path class="dmft-average-area" d="${areaPath}" />
       <polyline class="dmft-average-line" points="${points}" />
       ${DMFT_REFERENCE_DATA.map((item, index) => `
-        <circle class="dmft-average-dot ${reference === item ? "selected" : ""}" cx="${x(index).toFixed(1)}" cy="${y(item.average).toFixed(1)}" r="${reference === item ? 4.4 : 2.4}" />
+        <circle class="dmft-average-dot ${reference === item ? "selected" : ""}" cx="${x(index).toFixed(1)}" cy="${y(item.average).toFixed(1)}" r="${reference === item ? 4.7 : 2.5}" />
       `).join("")}
       ${
         referenceX !== null
@@ -805,14 +826,13 @@ function dmftReferenceSvg(reference, patientDmft) {
       }
       ${
         referenceX !== null && patientY !== null
-          ? `<path class="dmft-patient-marker" d="M ${referenceX.toFixed(1)} ${(patientY - 6).toFixed(1)} L ${(referenceX + 6).toFixed(1)} ${patientY.toFixed(1)} L ${referenceX.toFixed(1)} ${(patientY + 6).toFixed(1)} L ${(referenceX - 6).toFixed(1)} ${patientY.toFixed(1)} Z" />`
+          ? `<path class="dmft-patient-marker" d="M ${referenceX.toFixed(1)} ${(patientY - 5.5).toFixed(1)} L ${(referenceX + 5.5).toFixed(1)} ${patientY.toFixed(1)} L ${referenceX.toFixed(1)} ${(patientY + 5.5).toFixed(1)} L ${(referenceX - 5.5).toFixed(1)} ${patientY.toFixed(1)} Z" />`
           : ""
       }
       <text class="dmft-axis-label" x="${padding.left}" y="${height - 5}">5歳</text>
       <text class="dmft-axis-label" x="${width - padding.right}" y="${height - 5}" text-anchor="end">85歳-</text>
       ${referenceX !== null ? `<text class="dmft-axis-label selected" x="${referenceX.toFixed(1)}" y="${height - 5}" text-anchor="middle">${escapeHtml(reference.label)}</text>` : ""}
-      <text class="dmft-axis-label" x="4" y="${y(10).toFixed(1)}">10</text>
-      <text class="dmft-axis-label" x="4" y="${y(20).toFixed(1)}">20</text>
+      <text class="dmft-axis-label dmft-y-title" x="5" y="15">本</text>
     </svg>
   `;
 }

@@ -850,19 +850,36 @@ textarea:focus {
 
 .dmft-chart-wrap {
   display: grid;
-  gap: 5px;
+  justify-items: center;
+  gap: 6px;
   min-width: 0;
 }
 
 .dmft-chart-svg {
   width: 100%;
-  height: 112px;
+  max-width: 430px;
+  height: 152px;
   overflow: visible;
 }
 
-.dmft-axis {
-  stroke: #e5edf2;
+.dmft-chart-bg {
+  fill: rgba(248, 252, 253, 0.92);
+  stroke: rgba(221, 233, 239, 0.9);
   stroke-width: 1;
+}
+
+.dmft-grid {
+  stroke: #e7eef3;
+  stroke-width: 1;
+}
+
+.dmft-axis {
+  stroke: #cfdde6;
+  stroke-width: 1.2;
+}
+
+.dmft-average-area {
+  fill: rgba(107, 135, 157, 0.11);
 }
 
 .dmft-average-line {
@@ -900,6 +917,12 @@ textarea:focus {
   fill: #6c7a8c;
   font-size: 9px;
   font-weight: 800;
+}
+
+.dmft-y-label,
+.dmft-y-title {
+  fill: #8b98a8;
+  font-size: 8px;
 }
 
 .dmft-axis-label.selected {
@@ -1507,7 +1530,8 @@ textarea:focus {
   }
 
   .dmft-chart-svg {
-    height: 14.5mm;
+    max-width: 58mm;
+    height: 20mm;
   }
 
   .dmft-average-line {
@@ -1515,11 +1539,16 @@ textarea:focus {
   }
 
   .dmft-axis-label {
-    font-size: 5.5pt;
+    font-size: 4.9pt;
+  }
+
+  .dmft-y-label,
+  .dmft-y-title {
+    font-size: 4.4pt;
   }
 
   .dmft-axis-label.selected {
-    font-size: 6.2pt;
+    font-size: 5.2pt;
   }
 
   .dmft-legend {

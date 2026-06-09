@@ -156,16 +156,29 @@ function DmftReferenceCard({ form }: ResultReportProps) {
         ? "同年代平均より低めです。今のケアを続けていきましょう。"
         : "同年代平均より高めです。過去の治療部位も含めて、再発しにくい環境づくりを意識しましょう。"
       : "年齢と紙の記入欄DMFTを入力すると、今回の位置が表示されます。";
-  const width = 560;
-  const height = 112;
-  const padding = { top: 14, right: 14, bottom: 24, left: 24 };
+  const width = 420;
+  const height = 156;
+  const padding = { top: 18, right: 18, bottom: 30, left: 34 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
-  const maxValue = Math.max(28, patientDmft !== null ? Math.ceil(patientDmft + 2) : 28);
+  const highestAverage = Math.max(...dmftReferenceData.map((item) => item.average));
+  const highestValue = Math.max(highestAverage, patientDmft !== null ? patientDmft : 0);
+  const maxValue = Math.max(24, Math.min(32, Math.ceil((highestValue + 1) / 4) * 4));
+  const gridValues = [0, Math.round(maxValue / 2), maxValue];
   const xStep = chartWidth / (dmftReferenceData.length - 1);
   const x = (index: number) => padding.left + index * xStep;
   const y = (value: number) => padding.top + chartHeight - (Math.min(value, maxValue) / maxValue) * chartHeight;
-  const points = dmftReferenceData.map((item, index) => `${x(index).toFixed(1)},${y(item.average).toFixed(1)}`).join(" ");
+  const pointPairs = dmftReferenceData.map((item, index) => ({
+    x: x(index),
+    y: y(item.average)
+  }));
+  const points = pointPairs.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
+  const areaPath = [
+    `M ${pointPairs[0].x.toFixed(1)} ${(padding.top + chartHeight).toFixed(1)}`,
+    ...pointPairs.map((point) => `L ${point.x.toFixed(1)} ${point.y.toFixed(1)}`),
+    `L ${pointPairs[pointPairs.length - 1].x.toFixed(1)} ${(padding.top + chartHeight).toFixed(1)}`,
+    "Z"
+  ].join(" ");
   const referenceIndex = reference ? dmftReferenceData.indexOf(reference) : -1;
   const referenceX = referenceIndex >= 0 ? x(referenceIndex) : null;
   const patientY = patientDmft !== null ? y(patientDmft) : null;
@@ -196,18 +209,26 @@ function DmftReferenceCard({ form }: ResultReportProps) {
             {comparisonText}
           </p>
         </div>
-        <div className="grid min-w-0 gap-1">
-          <svg className="h-28 w-full overflow-visible print:h-[25mm]" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="DMFT全国平均と今回の位置">
-            <line x1={padding.left} y1={padding.top + chartHeight} x2={width - padding.right} y2={padding.top + chartHeight} stroke="#e5edf2" />
-            <line x1={padding.left} y1={y(10)} x2={width - padding.right} y2={y(10)} stroke="#e5edf2" />
-            <line x1={padding.left} y1={y(20)} x2={width - padding.right} y2={y(20)} stroke="#e5edf2" />
+        <div className="grid min-w-0 justify-items-center gap-1.5">
+          <svg className="h-[152px] w-full max-w-[430px] overflow-visible print:h-[20mm] print:max-w-[58mm]" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="DMFT全国平均と今回の位置">
+            <rect x={1} y={1} width={width - 2} height={height - 2} rx={18} fill="rgba(248,252,253,0.92)" stroke="rgba(221,233,239,0.9)" />
+            {gridValues.map((value) => (
+              <g key={value}>
+                <line x1={padding.left} y1={y(value)} x2={width - padding.right} y2={y(value)} stroke="#e7eef3" />
+                <text x={padding.left - 8} y={y(value) + 3} textAnchor="end" fill="#8b98a8" fontSize={8} fontWeight={800}>
+                  {value}
+                </text>
+              </g>
+            ))}
+            <line x1={padding.left} y1={padding.top + chartHeight} x2={width - padding.right} y2={padding.top + chartHeight} stroke="#cfdde6" strokeWidth={1.2} />
+            <path d={areaPath} fill="rgba(107,135,157,0.11)" />
             <polyline points={points} fill="none" stroke="#6b879d" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} />
             {dmftReferenceData.map((item, index) => (
               <circle
                 key={item.label}
                 cx={x(index)}
                 cy={y(item.average)}
-                r={reference === item ? 4.4 : 2.4}
+                r={reference === item ? 4.7 : 2.5}
                 fill={reference === item ? "#dff5e7" : "#fff"}
                 stroke={reference === item ? "#2f7a66" : "#6b879d"}
                 strokeWidth={reference === item ? 2.5 : 2}
@@ -218,7 +239,7 @@ function DmftReferenceCard({ form }: ResultReportProps) {
             ) : null}
             {referenceX !== null && patientY !== null ? (
               <path
-                d={`M ${referenceX.toFixed(1)} ${(patientY - 6).toFixed(1)} L ${(referenceX + 6).toFixed(1)} ${patientY.toFixed(1)} L ${referenceX.toFixed(1)} ${(patientY + 6).toFixed(1)} L ${(referenceX - 6).toFixed(1)} ${patientY.toFixed(1)} Z`}
+                d={`M ${referenceX.toFixed(1)} ${(patientY - 5.5).toFixed(1)} L ${(referenceX + 5.5).toFixed(1)} ${patientY.toFixed(1)} L ${referenceX.toFixed(1)} ${(patientY + 5.5).toFixed(1)} L ${(referenceX - 5.5).toFixed(1)} ${patientY.toFixed(1)} Z`}
                 fill="#d8b260"
                 stroke="#8c6420"
                 strokeWidth={1.8}
@@ -231,8 +252,7 @@ function DmftReferenceCard({ form }: ResultReportProps) {
                 {reference?.label}
               </text>
             ) : null}
-            <text x={4} y={y(10)} fill="#6c7a8c" fontSize={9} fontWeight={800}>10</text>
-            <text x={4} y={y(20)} fill="#6c7a8c" fontSize={9} fontWeight={800}>20</text>
+            <text x={5} y={15} fill="#8b98a8" fontSize={8} fontWeight={800}>本</text>
           </svg>
           <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500 print:gap-1.5 print:text-[5.8pt]">
             <span className="inline-flex items-center gap-1"><i className="h-1.5 w-3 rounded-full bg-[#6b879d]" />全国平均</span>
