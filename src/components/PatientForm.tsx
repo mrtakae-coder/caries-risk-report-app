@@ -38,7 +38,7 @@ type PdfWindow = Window &
       jsPDF: new (options: { orientation: "portrait"; unit: "mm"; format: "a4" }) => {
         addImage: (
           imageData: string,
-          format: "JPEG",
+          format: "JPEG" | "PNG",
           x: number,
           y: number,
           width: number,
@@ -55,6 +55,7 @@ const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
   jspdf: "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
 };
+const PDF_RENDER_SCALE = 4;
 
 let pdfLibrariesPromise: Promise<void> | null = null;
 
@@ -251,7 +252,7 @@ async function savePdfReport(form: ReportFormState) {
     const canvas = await browserWindow.html2canvas?.(report, {
       backgroundColor: "#ffffff",
       logging: false,
-      scale: Math.min(2, window.devicePixelRatio || 2),
+      scale: PDF_RENDER_SCALE,
       useCORS: true,
       onclone: (clonedDocument) => {
         clonedDocument.documentElement.style.setProperty("--print-scale", "1");
@@ -292,8 +293,8 @@ async function savePdfReport(form: ReportFormState) {
     }
 
     pdf.addImage(
-      canvas.toDataURL("image/jpeg", 0.98),
-      "JPEG",
+      canvas.toDataURL("image/png"),
+      "PNG",
       (pageWidth - imageWidth) / 2,
       margin,
       imageWidth,

@@ -17,6 +17,7 @@ const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
   jspdf: "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
 };
+const PDF_RENDER_SCALE = 4;
 const DMFT_REFERENCE_SOURCE = "厚生労働省 令和6年歯科疾患実態調査 表9・10";
 const DMFT_REFERENCE_DATA = [
   { label: "5歳", min: 5, max: 5, average: 0.0 },
@@ -633,7 +634,7 @@ async function downloadPdfReport() {
     const canvas = await window.html2canvas(report, {
       backgroundColor: "#ffffff",
       logging: false,
-      scale: Math.min(2, window.devicePixelRatio || 2),
+      scale: PDF_RENDER_SCALE,
       useCORS: true,
       onclone: (clonedDocument) => {
         clonedDocument.documentElement.style.setProperty("--print-scale", "1");
@@ -672,9 +673,9 @@ async function downloadPdfReport() {
 
     const x = (pageWidth - imageWidth) / 2;
     const y = margin;
-    const imageData = canvas.toDataURL("image/jpeg", 0.98);
+    const imageData = canvas.toDataURL("image/png");
 
-    pdf.addImage(imageData, "JPEG", x, y, imageWidth, imageHeight, undefined, "FAST");
+    pdf.addImage(imageData, "PNG", x, y, imageWidth, imageHeight, undefined, "FAST");
     pdf.save(`${reportFileName()}.pdf`);
   } catch (error) {
     console.error(error);
