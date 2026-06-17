@@ -10,8 +10,8 @@ const riskText = {
   high: "優先して整えたい傾向"
 };
 
-const PRINT_FIT_BASE_HEIGHT = 2600;
-const PRINT_FIT_MIN_SCALE = 0.82;
+const PRINT_FIT_BASE_HEIGHT = 2720;
+const PRINT_FIT_MIN_SCALE = 0.9;
 const DEFAULT_DOCUMENT_TITLE = document.title;
 const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
@@ -135,6 +135,12 @@ const scoreItems = [
     group: "感受性",
     label: "唾液分泌速度",
     max: 3,
+    scoreRanges: [
+      { score: 0, lines: ["10ml", "以上"] },
+      { score: 1, lines: ["6.0ml", "〜9.9ml"] },
+      { score: 2, lines: ["3.6ml", "〜5.9ml"] },
+      { score: 3, lines: ["3.5ml", "以下"] }
+    ],
     helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
     lowGuide: "唾液がしっかり出ている",
     highGuide: "お口が乾きやすい",
@@ -262,6 +268,11 @@ function selectedComment(item) {
 
 function scoreLabelFor(item, score) {
   return item.scoreLabels?.find((marker) => marker.score === score);
+}
+
+function scoreRangeHtml(item, score) {
+  const range = item.scoreRanges?.find((marker) => marker.score === score);
+  return range ? range.lines.map((line) => escapeHtml(line)).join("<br>") : "";
 }
 
 function isLactobacillusItem(item) {
@@ -736,12 +747,14 @@ function renderScoreFields() {
                 const value = Number(state[item.key] ?? 0);
                 const level = scoreLevel(value, item.max);
                 const hasColonies = isLactobacillusItem(item);
+                const hasScoreRanges = Boolean(item.scoreRanges);
                 const buttons = Array.from({ length: item.max + 1 }, (_, score) => {
                   const isSelected = score === value;
                   const marker = scoreLabelFor(item, score);
+                  const rangeHtml = scoreRangeHtml(item, score);
                   return `
                     <button
-                      class="score-button ${marker ? "has-marker" : ""} ${hasColonies ? "colony-button" : ""} ${isSelected ? "selected" : ""}"
+                      class="score-button ${marker ? "has-marker" : ""} ${rangeHtml ? "has-range" : ""} ${hasColonies ? "colony-button" : ""} ${isSelected ? "selected" : ""}"
                       type="button"
                       data-key="${item.key}"
                       data-score="${score}"
@@ -755,12 +768,13 @@ function renderScoreFields() {
                           ? `<span class="score-color-marker tone-${marker.tone}">${escapeHtml(marker.label)}</span>`
                           : ""
                       }
+                      ${rangeHtml ? `<span class="score-button-range">${rangeHtml}</span>` : ""}
                     </button>
                   `;
                 }).join("");
 
                 return `
-                  <div class="score-field ${item.scoreLabels ? "with-score-markers" : ""} ${hasColonies ? "with-colony-scale" : ""}">
+                  <div class="score-field ${item.scoreLabels ? "with-score-markers" : ""} ${hasScoreRanges ? "with-score-ranges" : ""} ${hasColonies ? "with-colony-scale" : ""}">
                     <div class="score-copy">
                       <strong>${item.label}</strong>
                       <small>${item.group} / 0〜${item.max}</small>
@@ -769,7 +783,7 @@ function renderScoreFields() {
                         <b>高</b>${item.highGuide}
                       </span>
                     </div>
-                    <div class="score-control ${item.scoreLabels ? "has-markers" : ""} ${hasColonies ? "has-colonies" : ""}" aria-label="${item.label}のスコア">
+                    <div class="score-control ${item.scoreLabels ? "has-markers" : ""} ${hasScoreRanges ? "has-ranges" : ""} ${hasColonies ? "has-colonies" : ""}" aria-label="${item.label}のスコア">
                       ${buttons}
                     </div>
                     <em class="mini-risk risk-${level}">${riskLabels[level]}</em>
@@ -916,7 +930,7 @@ function renderDmftReference() {
       ? patientDmft <= reference.average
         ? "同年代平均より低めです。今のケアを続けていきましょう。"
         : "同年代平均より高めです。過去の治療部位も含めて、再発しにくい環境づくりを意識しましょう。"
-      : "年齢と紙の記入欄DMFTを入力すると、今回の位置が表示されます。";
+      : "";
 
   document.querySelector("#dmft-reference").innerHTML = `
     <div class="dmft-reference-card">
@@ -937,7 +951,7 @@ function renderDmftReference() {
             <strong>${patientDmft !== null ? `${patientDmft.toFixed(1)}本` : "未入力"}</strong>
           </div>
         </div>
-        <p class="dmft-reference-note">${escapeHtml(comparisonText)}</p>
+        ${comparisonText ? `<p class="dmft-reference-note">${escapeHtml(comparisonText)}</p>` : ""}
       </div>
       <div class="dmft-chart-wrap">
         ${dmftReferenceSvg(reference, patientDmft)}
@@ -957,6 +971,8 @@ function scoreCells(item) {
   const hasColonies = isLactobacillusItem(item);
 
   for (let score = 0; score <= 3; score += 1) {
+    const rangeHtml = scoreRangeHtml(item, score);
+
     if (score > item.max) {
       cells.push(`<td class="score-cell muted">-</td>`);
       continue;
@@ -972,6 +988,7 @@ function scoreCells(item) {
               ? `<span class="score-color-marker table-marker tone-${scoreLabelFor(item, score).tone}">${escapeHtml(scoreLabelFor(item, score).label)}</span>`
               : ""
           }
+          ${rangeHtml ? `<span class="score-range-label">${rangeHtml}</span>` : ""}
         </span>
       </td>`
     );

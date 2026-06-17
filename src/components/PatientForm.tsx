@@ -128,17 +128,17 @@ const colonyDotCounts = [1, 7, 17, 34] as const;
 function ColonyPlate({ score }: { score: number }) {
   return (
     <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className="h-10 w-14">
-      <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(23,56,101,0.12)" />
-      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#fdfefe" stroke="#c9d8e2" strokeWidth={1.5} />
-      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#fff6df" stroke="rgba(216,178,96,0.35)" />
+      <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(5,12,25,0.18)" />
+      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#0a1020" stroke="#1f2f4a" strokeWidth={1.5} />
+      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#050914" stroke="rgba(96,165,250,0.48)" />
       {score === 3 ? (
         <path
           d="M18 28c5-9 18-13 29-10 8 2 13 7 12 12-2 7-13 9-24 8-9-1-19-3-17-10Z"
-          fill="rgba(188,106,79,0.16)"
+          fill="rgba(56,189,248,0.2)"
         />
       ) : null}
       {colonyDots.slice(0, colonyDotCounts[score as 0 | 1 | 2 | 3] ?? colonyDotCounts[0]).map(([cx, cy, radius, opacity], index) => (
-        <circle key={`${score}-${index}`} cx={cx} cy={cy} r={radius} opacity={opacity} fill="#bc6a4f" />
+        <circle key={`${score}-${index}`} cx={cx} cy={cy} r={radius} opacity={opacity} fill="#38bdf8" />
       ))}
     </svg>
   );
@@ -443,6 +443,20 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
                           >
                             <b>{marker.score}</b>
                             {marker.label}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    {definition.scoreRanges ? (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {definition.scoreRanges.map((range) => (
+                          <span
+                            key={`${definition.key}-${range.score}`}
+                            className="inline-grid min-w-[64px] justify-items-center rounded-xl border border-slate-200 bg-white px-2 py-1 text-[10px] font-black leading-tight text-slate-600"
+                          >
+                            <b className="text-xs text-[#173865]">{range.score}</b>
+                            <span>{range.lines[0]}</span>
+                            <span>{range.lines[1]}</span>
                           </span>
                         ))}
                       </div>

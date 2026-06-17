@@ -17,6 +17,11 @@
   --shadow: 0 22px 52px rgba(26, 55, 82, 0.13);
 }
 
+@page {
+  size: A4;
+  margin: 5mm;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -321,11 +326,20 @@ textarea:focus {
   grid-template-columns: minmax(0, 1fr) 38px;
 }
 
+.score-field.with-score-ranges {
+  grid-template-columns: minmax(0, 1fr) 38px;
+}
+
 .score-field.with-colony-scale {
   grid-template-columns: minmax(0, 1fr) 38px;
 }
 
 .score-field.with-score-markers .score-control {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.score-field.with-score-ranges .score-control {
   grid-column: 1 / -1;
   justify-self: start;
 }
@@ -336,6 +350,11 @@ textarea:focus {
 }
 
 .score-field.with-score-markers .mini-risk {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.score-field.with-score-ranges .mini-risk {
   grid-column: 2;
   grid-row: 1;
 }
@@ -403,6 +422,11 @@ textarea:focus {
   border-radius: 18px;
 }
 
+.score-control.has-ranges {
+  align-items: stretch;
+  border-radius: 18px;
+}
+
 .score-control.has-colonies {
   width: 100%;
   grid-template-columns: repeat(4, minmax(62px, 1fr));
@@ -436,6 +460,15 @@ textarea:focus {
   line-height: 1;
 }
 
+.score-button.has-range {
+  width: 68px;
+  height: 52px;
+  align-content: center;
+  gap: 2px;
+  border-radius: 14px;
+  line-height: 1;
+}
+
 .score-button.colony-button {
   width: 100%;
   height: 78px;
@@ -461,6 +494,18 @@ textarea:focus {
   font-size: 13px;
 }
 
+.score-button-range {
+  display: block;
+  color: #66758a;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.score-button.selected .score-button-range {
+  color: rgba(255, 255, 255, 0.88);
+}
+
 .colony-plate {
   display: grid;
   place-items: center;
@@ -473,39 +518,39 @@ textarea:focus {
 }
 
 .colony-dish-shadow {
-  fill: rgba(23, 56, 101, 0.12);
+  fill: rgba(5, 12, 25, 0.18);
 }
 
 .colony-dish {
-  fill: #fdfefe;
-  stroke: #c9d8e2;
+  fill: #0a1020;
+  stroke: #1f2f4a;
   stroke-width: 1.5;
 }
 
 .colony-medium {
-  fill: #fff6df;
-  stroke: rgba(216, 178, 96, 0.35);
+  fill: #050914;
+  stroke: rgba(96, 165, 250, 0.48);
   stroke-width: 1;
 }
 
 .colony-density {
-  fill: rgba(188, 106, 79, 0.16);
+  fill: rgba(56, 189, 248, 0.2);
 }
 
 .colony-dot {
-  fill: #bc6a4f;
+  fill: #38bdf8;
 }
 
 .score-button.selected .colony-dish {
-  stroke: rgba(255, 255, 255, 0.86);
+  stroke: rgba(147, 197, 253, 0.95);
 }
 
 .score-button.selected .colony-medium {
-  fill: #fff8df;
+  fill: #050914;
 }
 
 .score-button.selected .colony-dot {
-  fill: #a95340;
+  fill: #57c7ff;
 }
 
 .score-button.selected {
@@ -1135,9 +1180,23 @@ textarea:focus {
   gap: 3px;
 }
 
+.score-range-label {
+  display: block;
+  max-width: 34px;
+  color: #6e7d90;
+  font-size: 7px;
+  font-weight: 900;
+  line-height: 1.02;
+  text-align: center;
+}
+
 .score-cell.selected {
   background: var(--navy);
   color: #fff;
+}
+
+.score-cell.selected .score-range-label {
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .report-colony-cell {
@@ -1438,8 +1497,8 @@ textarea:focus {
 
   body {
     color: #1f2937;
-    font-size: 9.4pt;
-    line-height: 1.38;
+    font-size: 9.7pt;
+    line-height: 1.34;
   }
 
   .no-print {
@@ -1460,7 +1519,7 @@ textarea:focus {
   }
 
   .report {
-    width: calc(194mm / var(--print-scale, 1));
+    width: calc(200mm / var(--print-scale, 1));
     max-width: none;
     max-height: none;
     overflow: visible;
@@ -1508,7 +1567,7 @@ textarea:focus {
 
   .report section,
   .report-footer {
-    padding: 1.45mm 0;
+    padding: 1.25mm 0;
   }
 
   .patient-summary {
@@ -1694,12 +1753,12 @@ textarea:focus {
   }
 
   .risk-table {
-    font-size: 6.45pt;
+    font-size: 6.75pt;
   }
 
   .risk-table th,
   .risk-table td {
-    padding: 0.5mm 0.75mm;
+    padding: 0.5mm 0.85mm;
     line-height: 1.04;
   }
 
@@ -1710,7 +1769,7 @@ textarea:focus {
 
   .risk-table .item-column,
   .risk-table .item-data {
-    width: 66mm;
+    width: 72mm;
   }
 
   .risk-table .risk-column,
@@ -1719,7 +1778,7 @@ textarea:focus {
   }
 
   .score-cell {
-    width: 9.6mm;
+    width: 10.6mm;
   }
 
   .score-cell-content {
@@ -1731,8 +1790,14 @@ textarea:focus {
   }
 
   .report-colony-cell .colony-plate svg {
-    width: 7.2mm;
-    height: 4.8mm;
+    width: 8mm;
+    height: 5.35mm;
+  }
+
+  .score-range-label {
+    max-width: 10mm;
+    font-size: 4.3pt;
+    line-height: 1;
   }
 
   .score-color-marker.table-marker {

@@ -65,18 +65,18 @@ const colonyDotCounts = [1, 7, 17, 34] as const;
 
 function ColonyPlate({ score, compact = false }: { score: number; compact?: boolean }) {
   return (
-    <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className={compact ? "h-6 w-9 print:h-[4.8mm] print:w-[7.2mm]" : "h-10 w-14"}>
-      <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(23,56,101,0.12)" />
-      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#fdfefe" stroke="#c9d8e2" strokeWidth={1.5} />
-      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#fff6df" stroke="rgba(216,178,96,0.35)" />
+    <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className={compact ? "h-6 w-9 print:h-[5.35mm] print:w-[8mm]" : "h-10 w-14"}>
+      <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(5,12,25,0.18)" />
+      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#0a1020" stroke="#1f2f4a" strokeWidth={1.5} />
+      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#050914" stroke="rgba(96,165,250,0.48)" />
       {score === 3 ? (
         <path
           d="M18 28c5-9 18-13 29-10 8 2 13 7 12 12-2 7-13 9-24 8-9-1-19-3-17-10Z"
-          fill="rgba(188,106,79,0.16)"
+          fill="rgba(56,189,248,0.2)"
         />
       ) : null}
       {colonyDots.slice(0, colonyDotCounts[score as 0 | 1 | 2 | 3] ?? colonyDotCounts[0]).map(([cx, cy, radius, opacity], index) => (
-        <circle key={`${score}-${index}`} cx={cx} cy={cy} r={radius} opacity={opacity} fill="#bc6a4f" />
+        <circle key={`${score}-${index}`} cx={cx} cy={cy} r={radius} opacity={opacity} fill="#38bdf8" />
       ))}
     </svg>
   );
@@ -121,13 +121,15 @@ function scoreCells(
   key: string,
   score: number,
   max: number,
-  scoreLabels?: Array<{ score: number; label: string; tone: keyof typeof scoreToneClass }>
+  scoreLabels?: Array<{ score: number; label: string; tone: keyof typeof scoreToneClass }>,
+  scoreRanges?: Array<{ score: number; lines: [string, string] }>
 ) {
   const showsColonies = key === "lactobacillus";
 
   return Array.from({ length: 4 }, (_, value) => {
     const unavailable = value > max;
     const marker = scoreLabels?.find((item) => item.score === value);
+    const range = scoreRanges?.find((item) => item.score === value);
 
     return (
       <td
@@ -149,6 +151,18 @@ function scoreCells(
                 className={`inline-flex max-w-[48px] items-center justify-center whitespace-nowrap rounded-full border px-1 py-0.5 text-[8.5px] font-black leading-none print:max-w-[9.2mm] print:px-[0.5mm] print:py-[0.2mm] print:text-[5pt] ${scoreToneClass[marker.tone]}`}
               >
                 {marker.label}
+              </span>
+            ) : null}
+            {range ? (
+              <span
+                className={cn(
+                  "block max-w-[34px] text-center text-[7px] font-black leading-none text-slate-500 print:max-w-[10mm] print:text-[4.3pt]",
+                  score === value && "text-white/85"
+                )}
+              >
+                {range.lines[0]}
+                <br />
+                {range.lines[1]}
               </span>
             ) : null}
           </span>
@@ -217,7 +231,7 @@ function DmftReferenceCard({ form }: ResultReportProps) {
       ? patientDmft <= reference.average
         ? "同年代平均より低めです。今のケアを続けていきましょう。"
         : "同年代平均より高めです。過去の治療部位も含めて、再発しにくい環境づくりを意識しましょう。"
-      : "年齢と紙の記入欄DMFTを入力すると、今回の位置が表示されます。";
+      : "";
   const width = 420;
   const height = 156;
   const padding = { top: 18, right: 18, bottom: 30, left: 34 };
@@ -267,9 +281,11 @@ function DmftReferenceCard({ form }: ResultReportProps) {
               </div>
             ))}
           </div>
-          <p className="mt-3 text-xs font-bold leading-5 text-slate-600 print:mt-2 print:text-[6.4pt] print:leading-tight">
-            {comparisonText}
-          </p>
+          {comparisonText ? (
+            <p className="mt-3 text-xs font-bold leading-5 text-slate-600 print:mt-2 print:text-[6.4pt] print:leading-tight">
+              {comparisonText}
+            </p>
+          ) : null}
         </div>
         <div className="grid min-w-0 justify-items-center gap-1.5">
           <svg className="h-[152px] w-full max-w-[430px] overflow-visible print:h-[20mm] print:max-w-[58mm]" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="DMFT全国平均と今回の位置">
@@ -450,7 +466,7 @@ export function ResultReport({ form }: ResultReportProps) {
                           </span>
                         </span>
                       </td>
-                      {scoreCells(row.key, row.score, row.max, row.scoreLabels)}
+                      {scoreCells(row.key, row.score, row.max, row.scoreLabels, row.scoreRanges)}
                       <td className="px-2 py-2 text-center print:px-1 print:py-1">
                         <span className={`rounded-full px-2 py-1 text-xs font-bold print:text-[8px] ${riskPillClass[row.level]}`}>
                           {riskLabels[row.level]}

@@ -42,6 +42,16 @@ export type ScoreDefinition = {
   label: string;
   shortLabel: string;
   max: 2 | 3;
+  includeInOverall?: boolean;
+  scoreLabels?: Array<{
+    score: number;
+    label: string;
+    tone: "quickBlue" | "slowBlue" | "green" | "yellow";
+  }>;
+  scoreRanges?: Array<{
+    score: number;
+    lines: [string, string];
+  }>;
   helpText: string;
   lowGuide: string;
   highGuide: string;
@@ -62,6 +72,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "う蝕経験（DMFT）",
     shortLabel: "DMFT",
     max: 3,
+    includeInOverall: false,
     helpText: "これまでのむし歯の経験から、今後の注意度をみる項目です。",
     lowGuide: "これまでのむし歯が少ない",
     highGuide: "これまでのむし歯が多い"
@@ -72,6 +83,7 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "関連全身疾患",
     shortLabel: "全身",
     max: 2,
+    includeInOverall: false,
     helpText: "体調や服薬がお口の乾き・ケアに影響する可能性をみます。",
     lowGuide: "体調による影響が少ない",
     highGuide: "体調やお薬の影響に注意"
@@ -132,6 +144,12 @@ export const scoreDefinitions: ScoreDefinition[] = [
     label: "唾液分泌速度",
     shortLabel: "唾液量",
     max: 3,
+    scoreRanges: [
+      { score: 0, lines: ["10ml", "以上"] },
+      { score: 1, lines: ["6.0ml", "〜9.9ml"] },
+      { score: 2, lines: ["3.6ml", "〜5.9ml"] },
+      { score: 3, lines: ["3.5ml", "以下"] }
+    ],
     helpText: "唾液の流れやお口の乾きやすさに関係する項目です。",
     lowGuide: "唾液がしっかり出ている",
     highGuide: "お口が乾きやすい"
@@ -141,7 +159,13 @@ export const scoreDefinitions: ScoreDefinition[] = [
     group: "感受性",
     label: "唾液緩衝能",
     shortLabel: "緩衝能",
-    max: 2,
+    max: 3,
+    scoreLabels: [
+      { score: 0, label: "即青", tone: "quickBlue" },
+      { score: 1, label: "ゆっくり青", tone: "slowBlue" },
+      { score: 2, label: "緑", tone: "green" },
+      { score: 3, label: "黄", tone: "yellow" }
+    ],
     helpText: "食後のお口を元の状態に戻す力の目安です。",
     lowGuide: "食後のお口が元に戻りやすい",
     highGuide: "食後のお口が酸性に傾きやすい"
