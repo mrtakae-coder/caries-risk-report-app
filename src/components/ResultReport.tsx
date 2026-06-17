@@ -156,7 +156,7 @@ function scoreCells(
             {range ? (
               <span
                 className={cn(
-                  "block max-w-[34px] text-center text-[7px] font-black leading-none text-slate-500 print:max-w-[10mm] print:text-[4.3pt]",
+                  "block max-w-[40px] text-center text-[8.5px] font-black leading-none text-slate-500 print:max-w-[11.5mm] print:text-[5pt]",
                   score === value && "text-white/85"
                 )}
               >

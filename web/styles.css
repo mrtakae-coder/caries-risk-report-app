@@ -497,7 +497,7 @@ textarea:focus {
 .score-button-range {
   display: block;
   color: #66758a;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 900;
   line-height: 1.08;
 }
@@ -1182,9 +1182,9 @@ textarea:focus {
 
 .score-range-label {
   display: block;
-  max-width: 34px;
+  max-width: 40px;
   color: #6e7d90;
-  font-size: 7px;
+  font-size: 8.5px;
   font-weight: 900;
   line-height: 1.02;
   text-align: center;
@@ -1795,8 +1795,8 @@ textarea:focus {
   }
 
   .score-range-label {
-    max-width: 10mm;
-    font-size: 4.3pt;
+    max-width: 11.5mm;
+    font-size: 5pt;
     line-height: 1;
   }
 
