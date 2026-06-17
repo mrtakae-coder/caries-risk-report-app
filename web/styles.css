@@ -1208,8 +1208,8 @@ textarea:focus {
 }
 
 .report-colony-cell .colony-plate svg {
-  width: 34px;
-  height: 23px;
+  width: 40px;
+  height: 27px;
 }
 
 .score-cell.muted {
@@ -1790,8 +1790,8 @@ textarea:focus {
   }
 
   .report-colony-cell .colony-plate svg {
-    width: 8mm;
-    height: 5.35mm;
+    width: 10.2mm;
+    height: 6.8mm;
   }
 
   .score-range-label {
