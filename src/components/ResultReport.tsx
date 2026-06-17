@@ -65,7 +65,7 @@ const colonyDotCounts = [1, 7, 17, 34] as const;
 
 function ColonyPlate({ score, compact = false }: { score: number; compact?: boolean }) {
   return (
-    <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className={compact ? "h-7 w-10 print:h-[6.8mm] print:w-[10.2mm]" : "h-10 w-14"}>
+    <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className={compact ? "h-8 w-12 print:h-[8.1mm] print:w-[12mm]" : "h-10 w-14"}>
       <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(5,12,25,0.18)" />
       <ellipse cx={37} cy={25} rx={30} ry={19} fill="#0a1020" stroke="#1f2f4a" strokeWidth={1.5} />
       <ellipse cx={37} cy={25} rx={25} ry={15} fill="#050914" stroke="rgba(96,165,250,0.48)" />
