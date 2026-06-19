@@ -275,11 +275,13 @@ function scoreRangeHtml(item, score) {
   return range ? range.lines.map((line) => escapeHtml(line)).join("<br>") : "";
 }
 
-function isLactobacillusItem(item) {
-  return item.key === "lactobacillus";
+function colonyVariantForItem(item) {
+  if (item.key === "lactobacillus") return "lactobacillus";
+  if (item.key === "mutans") return "mutans";
+  return null;
 }
 
-function colonyPlateSvg(score) {
+function colonyPlateSvg(score, variant = "lactobacillus") {
   const colonyDots = [
     [24, 24, 1.8, 0.8],
     [39, 20, 1.5, 0.65],
@@ -320,7 +322,7 @@ function colonyPlateSvg(score) {
   const dots = colonyDots.slice(0, dotCounts[score] ?? dotCounts[0]);
 
   return `
-    <span class="colony-plate" aria-hidden="true">
+    <span class="colony-plate colony-plate-${variant}" aria-hidden="true">
       <svg viewBox="0 0 74 50" focusable="false">
         <ellipse class="colony-dish-shadow" cx="37" cy="42" rx="26" ry="3.6" />
         <ellipse class="colony-dish" cx="37" cy="25" rx="30" ry="19" />
@@ -746,7 +748,8 @@ function renderScoreFields() {
               .map((item) => {
                 const value = Number(state[item.key] ?? 0);
                 const level = scoreLevel(value, item.max);
-                const hasColonies = isLactobacillusItem(item);
+                const colonyVariant = colonyVariantForItem(item);
+                const hasColonies = Boolean(colonyVariant);
                 const hasScoreRanges = Boolean(item.scoreRanges);
                 const buttons = Array.from({ length: item.max + 1 }, (_, score) => {
                   const isSelected = score === value;
@@ -761,7 +764,7 @@ function renderScoreFields() {
                       aria-pressed="${isSelected}"
                       aria-label="${item.label} ${score}点"
                     >
-                      ${hasColonies ? colonyPlateSvg(score) : ""}
+                      ${hasColonies ? colonyPlateSvg(score, colonyVariant) : ""}
                       <span class="score-button-number">${score}</span>
                       ${
                         marker && !hasColonies
@@ -968,7 +971,8 @@ function renderDmftReference() {
 function scoreCells(item) {
   const value = Number(state[item.key] ?? 0);
   const cells = [];
-  const hasColonies = isLactobacillusItem(item);
+  const colonyVariant = colonyVariantForItem(item);
+  const hasColonies = Boolean(colonyVariant);
 
   for (let score = 0; score <= 3; score += 1) {
     const rangeHtml = scoreRangeHtml(item, score);
@@ -981,7 +985,7 @@ function scoreCells(item) {
     cells.push(
       `<td class="score-cell ${hasColonies ? "report-colony-cell" : ""} ${value === score ? "selected" : ""}">
         <span class="score-cell-content">
-          ${hasColonies ? colonyPlateSvg(score) : ""}
+          ${hasColonies ? colonyPlateSvg(score, colonyVariant) : ""}
           <span>${score}</span>
           ${
             scoreLabelFor(item, score) && !hasColonies

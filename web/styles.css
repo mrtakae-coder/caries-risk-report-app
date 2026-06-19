@@ -541,6 +541,24 @@ textarea:focus {
   fill: #38bdf8;
 }
 
+.colony-plate-mutans .colony-dish {
+  fill: #ffffff;
+  stroke: #bfdbfe;
+}
+
+.colony-plate-mutans .colony-medium {
+  fill: #ffffff;
+  stroke: rgba(37, 99, 235, 0.38);
+}
+
+.colony-plate-mutans .colony-density {
+  fill: rgba(56, 189, 248, 0.1);
+}
+
+.colony-plate-mutans .colony-dot {
+  fill: #38bdf8;
+}
+
 .score-button.selected .colony-dish {
   stroke: rgba(147, 197, 253, 0.95);
 }
@@ -551,6 +569,15 @@ textarea:focus {
 
 .score-button.selected .colony-dot {
   fill: #57c7ff;
+}
+
+.score-button.selected .colony-plate-mutans .colony-dish {
+  fill: #ffffff;
+  stroke: rgba(191, 219, 254, 0.98);
+}
+
+.score-button.selected .colony-plate-mutans .colony-medium {
+  fill: #ffffff;
 }
 
 .score-button.selected {

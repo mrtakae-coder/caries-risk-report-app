@@ -125,16 +125,41 @@ const colonyDots = [
 
 const colonyDotCounts = [1, 7, 17, 34] as const;
 
-function ColonyPlate({ score }: { score: number }) {
+type ColonyVariant = "lactobacillus" | "mutans";
+
+function colonyVariantForKey(key: CariesScoreKey): ColonyVariant | null {
+  if (key === "lactobacillus") return "lactobacillus";
+  if (key === "mutans") return "mutans";
+  return null;
+}
+
+function ColonyPlate({ score, variant = "lactobacillus" }: { score: number; variant?: ColonyVariant }) {
+  const isMutans = variant === "mutans";
+
   return (
     <svg viewBox="0 0 74 50" aria-hidden="true" focusable="false" className="h-10 w-14">
       <ellipse cx={37} cy={42} rx={26} ry={3.6} fill="rgba(5,12,25,0.18)" />
-      <ellipse cx={37} cy={25} rx={30} ry={19} fill="#0a1020" stroke="#1f2f4a" strokeWidth={1.5} />
-      <ellipse cx={37} cy={25} rx={25} ry={15} fill="#050914" stroke="rgba(96,165,250,0.48)" />
+      <ellipse
+        cx={37}
+        cy={25}
+        rx={30}
+        ry={19}
+        fill={isMutans ? "#ffffff" : "#0a1020"}
+        stroke={isMutans ? "#bfdbfe" : "#1f2f4a"}
+        strokeWidth={1.5}
+      />
+      <ellipse
+        cx={37}
+        cy={25}
+        rx={25}
+        ry={15}
+        fill={isMutans ? "#ffffff" : "#050914"}
+        stroke={isMutans ? "rgba(37,99,235,0.38)" : "rgba(96,165,250,0.48)"}
+      />
       {score === 3 ? (
         <path
           d="M18 28c5-9 18-13 29-10 8 2 13 7 12 12-2 7-13 9-24 8-9-1-19-3-17-10Z"
-          fill="rgba(56,189,248,0.2)"
+          fill={isMutans ? "rgba(56,189,248,0.1)" : "rgba(56,189,248,0.2)"}
         />
       ) : null}
       {colonyDots.slice(0, colonyDotCounts[score as 0 | 1 | 2 | 3] ?? colonyDotCounts[0]).map(([cx, cy, radius, opacity], index) => (
@@ -414,7 +439,8 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
           <div className="grid gap-3">
             {scoreDefinitions.map((definition) => {
               const level = getItemRiskLevel(definition.key, form.scores);
-              const showsColonyScale = definition.key === "lactobacillus";
+              const colonyVariant = colonyVariantForKey(definition.key);
+              const showsColonyScale = Boolean(colonyVariant);
 
               return (
                 <div
@@ -479,7 +505,7 @@ export function PatientForm({ form, onChange }: PatientFormProps) {
                                   : "border-transparent bg-white/85 text-slate-600 hover:border-slate-200"
                               }`}
                             >
-                              <ColonyPlate score={score} />
+                              <ColonyPlate score={score} variant={colonyVariant ?? "lactobacillus"} />
                               <span>{score}</span>
                             </button>
                           );
