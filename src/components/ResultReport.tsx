@@ -356,36 +356,36 @@ export function ResultReport({ form }: ResultReportProps) {
   return (
     <article className="report-page mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-slate-100 bg-white shadow-soft print:max-w-none print:rounded-none print:border-0 print:shadow-none">
       <div className="h-2 bg-[linear-gradient(90deg,#173865,#6b879d_55%,#d8b68a)] print:h-[3mm]" />
-      <header className="flex flex-col gap-4 bg-gradient-to-br from-skywash-50 via-white to-white px-7 py-6 print:flex-row print:items-start print:justify-between print:bg-white print:px-0 print:py-4">
-        <div className="flex items-center gap-4 print:gap-3">
+      <header className="flex flex-col gap-4 bg-gradient-to-br from-skywash-50 via-white to-white px-7 py-5 print:flex-row print:items-start print:justify-between print:bg-white print:px-0 print:py-2">
+        <div className="flex items-center gap-4 print:gap-2">
           <img
             src="/abundance-logo.png"
             alt="アバンダンスデンタル名古屋ロゴ"
-            className="h-16 w-16 object-contain print:h-12 print:w-12"
+            className="h-14 w-14 object-contain print:h-[9.5mm] print:w-[9.5mm]"
           />
           <div>
-            <p className="text-xs font-black tracking-[0.12em] text-slate-500 print:text-[8px]">
+            <p className="text-xs font-black tracking-[0.12em] text-slate-500 print:text-[7px]">
               ABUNDANCE DENTAL NAGOYA
             </p>
-            <h1 className="mt-1 text-3xl font-bold tracking-normal text-slate-900 print:text-2xl">
+            <h1 className="mt-1 text-3xl font-bold tracking-normal text-slate-900 print:text-[18px]">
               唾液検査結果レポート
             </h1>
           </div>
         </div>
-        <p className="text-sm font-bold text-slate-500 print:text-[9px]">
+        <p className="text-sm font-bold text-slate-500 print:text-[7px]">
           作成日 {createdDate}
         </p>
       </header>
 
-      <section className="grid grid-cols-1 gap-3 border-t border-slate-100 px-7 py-4 sm:grid-cols-3 print:grid-cols-3 print:px-0 print:py-3">
+      <section className="grid grid-cols-1 gap-3 border-t border-slate-100 px-7 py-3 sm:grid-cols-3 print:grid-cols-3 print:gap-1.5 print:px-0 print:py-1.5">
         {[
           ["カルテ番号", form.patient.chartNumber || "未入力"],
           ["患者年齢", form.patient.age ? `${form.patient.age}歳` : "未入力"],
           ["担当衛生士", form.patient.hygienistName || "未入力"]
         ].map(([label, value]) => (
-          <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3 print:rounded-lg print:p-2">
-            <p className="text-xs font-bold text-slate-500 print:text-[7px]">{label}</p>
-            <p className="mt-1 text-base font-bold text-slate-800 print:text-[10px]">{value}</p>
+          <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-2.5 print:rounded-lg print:p-1.5">
+            <p className="text-xs font-bold text-slate-500 print:text-[6px]">{label}</p>
+            <p className="mt-0.5 text-base font-bold text-slate-800 print:text-[8.8px]">{value}</p>
           </div>
         ))}
       </section>
@@ -445,21 +445,21 @@ export function ResultReport({ form }: ResultReportProps) {
                         </td>
                       ) : null}
                       <td className="border-r border-slate-100 px-2 py-2 text-left print:px-1 print:py-1">
-                        <span className="block text-[13.5px] font-black leading-[1.18] text-slate-800 print:text-[7.7px] print:leading-[1.08]">
+                        <span className="block text-[14.5px] font-black leading-[1.18] text-slate-800 print:text-[9.8px] print:leading-[1.1]">
                           {row.label}
                         </span>
-                        <span className="mt-1 block text-[9.5px] font-bold leading-[1.32] text-slate-500 print:mt-0.5 print:text-[5.4px] print:leading-[1.12]">
+                        <span className="mt-1 block text-[10.8px] font-bold leading-[1.32] text-slate-500 print:mt-0.5 print:text-[7.5px] print:leading-[1.12]">
                           {row.helpText}
                         </span>
-                        <span className="mt-1 flex flex-wrap gap-x-2.5 gap-y-1 text-[11.5px] font-black leading-[1.25] text-slate-700 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[6.25px] print:leading-[1.1]">
+                        <span className="mt-1 flex flex-wrap gap-x-2.5 gap-y-1 text-[12px] font-black leading-[1.25] text-slate-700 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[7.8px] print:leading-[1.1]">
                           <span className="inline-flex items-center gap-1 print:gap-0.5">
-                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-mist-100 px-1 text-[11px] text-mist-700 print:min-h-3 print:min-w-4 print:text-[6px]">
+                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-mist-100 px-1 text-[11px] text-mist-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.1px]">
                               低
                             </b>
                             <em className="not-italic text-[#26374c]">{row.lowGuide}</em>
                           </span>
                           <span className="inline-flex items-center gap-1 print:gap-0.5">
-                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-blossom-100 px-1 text-[11px] text-rose-700 print:min-h-3 print:min-w-4 print:text-[6px]">
+                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-blossom-100 px-1 text-[11px] text-rose-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.1px]">
                               高
                             </b>
                             <em className="not-italic text-[#26374c]">{row.highGuide}</em>
