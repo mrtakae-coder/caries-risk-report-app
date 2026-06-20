@@ -958,8 +958,8 @@ textarea:focus {
 .dmft-reference-card {
   display: grid;
   grid-template-columns: minmax(230px, 0.82fr) 1.18fr;
-  gap: 16px;
-  padding: 16px;
+  gap: 14px;
+  padding: 14px;
   border: 1px solid #dde9ef;
   border-radius: 20px;
   background:
@@ -968,7 +968,7 @@ textarea:focus {
 }
 
 .dmft-reference-copy h3 {
-  margin: 5px 0 10px;
+  margin: 4px 0 8px;
   color: #17283e;
   font-size: 17px;
   line-height: 1.25;
@@ -981,8 +981,8 @@ textarea:focus {
 }
 
 .dmft-stat-grid div {
-  min-height: 48px;
-  padding: 8px 9px;
+  min-height: 44px;
+  padding: 7px 8px;
   border: 1px solid #e5edf2;
   border-radius: 13px;
   background: #fff;
@@ -1005,7 +1005,7 @@ textarea:focus {
 }
 
 .dmft-reference-note {
-  margin: 9px 0 0;
+  margin: 7px 0 0;
   color: #526274;
   font-size: 12px;
   font-weight: 700;
@@ -1015,14 +1015,14 @@ textarea:focus {
 .dmft-chart-wrap {
   display: grid;
   justify-items: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 .dmft-chart-svg {
   width: 100%;
   max-width: 430px;
-  height: 152px;
+  height: 146px;
   overflow: visible;
 }
 
@@ -1104,6 +1104,24 @@ textarea:focus {
   font-weight: 800;
 }
 
+.dmft-chart-meta {
+  display: flex;
+  width: 100%;
+  max-width: 430px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dmft-source {
+  flex: 0 1 auto;
+  color: #8995a3;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: right;
+}
+
 .dmft-legend span {
   display: inline-flex;
   align-items: center;
@@ -1125,7 +1143,7 @@ textarea:focus {
   background: #d8b260;
 }
 
-.dmft-chart-wrap small {
+.dmft-chart-wrap > small {
   color: var(--muted);
   font-size: 9px;
   font-weight: 700;
@@ -1302,7 +1320,7 @@ textarea:focus {
 .item-cell strong {
   display: block;
   color: #243044;
-  font-size: 14.5px;
+  font-size: 15.2px;
   font-weight: 900;
   line-height: 1.18;
 }
@@ -1310,7 +1328,7 @@ textarea:focus {
 .item-cell small {
   display: block;
   color: #647084;
-  font-size: 10.8px;
+  font-size: 11.4px;
   font-weight: 700;
   line-height: 1.32;
 }
@@ -1320,7 +1338,7 @@ textarea:focus {
   flex-wrap: wrap;
   gap: 4px 10px;
   color: #334155;
-  font-size: 12px;
+  font-size: 12.7px;
   font-weight: 900;
   line-height: 1.25;
 }
@@ -1340,7 +1358,7 @@ textarea:focus {
   border-radius: 999px;
   background: #eef7f3;
   color: var(--mint-ink);
-  font-size: 11px;
+  font-size: 11.5px;
   line-height: 1;
 }
 
@@ -1376,7 +1394,8 @@ textarea:focus {
   position: relative;
   padding-left: 18px;
   color: #4d5f74;
-  font-size: 13px;
+  font-size: 13.5px;
+  line-height: 1.55;
 }
 
 .compact-list li::before {
@@ -1700,23 +1719,23 @@ textarea:focus {
 
   .dmft-reference-card {
     grid-template-columns: 0.86fr 1.14fr;
-    gap: 1.6mm;
-    padding: 1.6mm;
+    gap: 1.1mm;
+    padding: 1.15mm;
     border-radius: 4mm;
   }
 
   .dmft-reference-copy h3 {
-    margin: 0.3mm 0 0.8mm;
-    font-size: 8pt;
+    margin: 0.2mm 0 0.55mm;
+    font-size: 7.7pt;
   }
 
   .dmft-stat-grid {
-    gap: 0.9mm;
+    gap: 0.6mm;
   }
 
   .dmft-stat-grid div {
-    min-height: 6.8mm;
-    padding: 0.8mm;
+    min-height: 6mm;
+    padding: 0.55mm 0.7mm;
     border-radius: 2.5mm;
   }
 
@@ -1725,18 +1744,18 @@ textarea:focus {
   }
 
   .dmft-stat-grid strong {
-    font-size: 7.1pt;
+    font-size: 6.9pt;
   }
 
   .dmft-reference-note {
-    margin-top: 0.7mm;
-    font-size: 5.45pt;
-    line-height: 1.15;
+    margin-top: 0.45mm;
+    font-size: 5.3pt;
+    line-height: 1.08;
   }
 
   .dmft-chart-svg {
     max-width: 58mm;
-    height: 20mm;
+    height: 18.7mm;
   }
 
   .dmft-average-line {
@@ -1757,12 +1776,18 @@ textarea:focus {
   }
 
   .dmft-legend {
-    gap: 2mm;
-    font-size: 5pt;
+    gap: 1.4mm;
+    font-size: 4.85pt;
   }
 
-  .dmft-chart-wrap small {
-    font-size: 4.8pt;
+  .dmft-chart-meta {
+    max-width: 58mm;
+    gap: 1.1mm;
+  }
+
+  .dmft-source {
+    font-size: 3.65pt;
+    line-height: 1;
   }
 
   .report-section-title {
@@ -1844,22 +1869,22 @@ textarea:focus {
   }
 
   .item-cell {
-    gap: 0.35mm;
+    gap: 0.4mm;
   }
 
   .item-cell strong {
-    font-size: 7.35pt;
+    font-size: 7.75pt;
     line-height: 1.08;
   }
 
   .item-cell small {
-    font-size: 5.65pt;
-    line-height: 1.12;
+    font-size: 6.05pt;
+    line-height: 1.1;
   }
 
   .report-risk-guide {
     gap: 0.25mm 1mm;
-    font-size: 5.85pt;
+    font-size: 6.2pt;
     line-height: 1.1;
   }
 
@@ -1870,7 +1895,7 @@ textarea:focus {
   .report-risk-guide b {
     min-width: 4.9mm;
     min-height: 3.5mm;
-    font-size: 5.35pt;
+    font-size: 5.7pt;
   }
 
   .guidance-section {
@@ -1888,8 +1913,8 @@ textarea:focus {
 
   .compact-list li {
     padding-left: 2.8mm;
-    font-size: 6.15pt;
-    line-height: 1.14;
+    font-size: 6.35pt;
+    line-height: 1.12;
   }
 
   .compact-list li::before {

@@ -295,34 +295,34 @@ function DmftReferenceCard({ form }: ResultReportProps) {
 
   return (
     <section className="border-t border-slate-100 bg-slate-50/40 px-7 py-5 print:px-0 print:py-3">
-      <div className="grid gap-4 rounded-3xl border border-slate-200 bg-white/95 p-4 print:grid-cols-[0.9fr_1.1fr] print:gap-3 print:rounded-xl print:p-3 lg:grid-cols-[0.82fr_1.18fr]">
+      <div className="grid gap-3.5 rounded-3xl border border-slate-200 bg-white/95 p-3.5 print:grid-cols-[0.9fr_1.1fr] print:gap-[4px] print:rounded-xl print:p-[4.3px] lg:grid-cols-[0.82fr_1.18fr]">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.12em] text-[#173865] print:text-[7px]">
             DMFT Reference
           </p>
-          <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[12px]">
+          <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[10.3px]">
             日本人のDMFT平均と今回の位置
           </h2>
-          <div className="mt-3 grid grid-cols-3 gap-2 print:mt-2 print:gap-1.5">
+          <div className="mt-2.5 grid grid-cols-3 gap-1.5 print:mt-1 print:gap-[2.3px]">
             {[
               ["年齢帯", reference?.label ?? "未判定"],
               ["全国平均", reference ? `${reference.average.toFixed(1)}本` : "-"],
               ["今回のDMFT", patientDmft !== null ? `${patientDmft.toFixed(1)}本` : "未入力"]
             ].map(([label, value]) => (
-              <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-2 print:rounded-lg print:p-1.5">
+              <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-2 print:min-h-[22.7px] print:rounded-lg print:p-[2.3px]">
                 <p className="text-[10px] font-bold text-slate-500 print:text-[5.5pt]">{label}</p>
-                <p className="mt-0.5 text-sm font-black text-[#173865] print:text-[8.2pt]">{value}</p>
+                <p className="mt-0.5 text-sm font-black text-[#173865] print:text-[9.2px]">{value}</p>
               </div>
             ))}
           </div>
           {comparisonText ? (
-            <p className="mt-3 text-xs font-bold leading-5 text-slate-600 print:mt-2 print:text-[6.4pt] print:leading-tight">
+            <p className="mt-2 text-xs font-bold leading-5 text-slate-600 print:mt-1 print:text-[7px] print:leading-[1.08]">
               {comparisonText}
             </p>
           ) : null}
         </div>
         <div className="grid min-w-0 justify-items-center gap-1.5">
-          <svg className="h-[152px] w-full max-w-[430px] overflow-visible print:h-[20mm] print:max-w-[58mm]" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="DMFT全国平均と今回の位置">
+          <svg className="h-[146px] w-full max-w-[430px] overflow-visible print:h-[18.7mm] print:max-w-[58mm]" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="DMFT全国平均と今回の位置">
             <rect x={1} y={1} width={width - 2} height={height - 2} rx={18} fill="rgba(248,252,253,0.92)" stroke="rgba(221,233,239,0.9)" />
             {gridValues.map((value) => (
               <g key={value}>
@@ -366,11 +366,13 @@ function DmftReferenceCard({ form }: ResultReportProps) {
             ) : null}
             <text x={5} y={15} fill="#8b98a8" fontSize={8} fontWeight={800}>本</text>
           </svg>
-          <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500 print:gap-1.5 print:text-[5.8pt]">
-            <span className="inline-flex items-center gap-1"><i className="h-1.5 w-3 rounded-full bg-[#6b879d]" />全国平均</span>
-            <span className="inline-flex items-center gap-1"><i className="h-1.5 w-3 rounded-full bg-[#d8b260]" />今回のDMFT</span>
+          <div className="flex w-full max-w-[430px] items-center justify-between gap-2 print:max-w-[58mm] print:gap-[4px]">
+            <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500 print:gap-[5px] print:text-[6.5px]">
+              <span className="inline-flex items-center gap-1"><i className="h-1.5 w-3 rounded-full bg-[#6b879d]" />全国平均</span>
+              <span className="inline-flex items-center gap-1"><i className="h-1.5 w-3 rounded-full bg-[#d8b260]" />今回のDMFT</span>
+            </div>
+            <p className="shrink text-right text-[8px] font-bold leading-none text-slate-400 print:text-[4.9px]">出典: {dmftReferenceSource}</p>
           </div>
-          <p className="text-[9px] font-semibold text-slate-500 print:text-[5.3pt]">出典: {dmftReferenceSource}</p>
         </div>
       </div>
     </section>
@@ -479,21 +481,21 @@ export function ResultReport({ form }: ResultReportProps) {
                         </td>
                       ) : null}
                       <td className="border-r border-slate-100 px-2 py-2 text-left print:px-1 print:py-1">
-                        <span className="block text-[14.5px] font-black leading-[1.18] text-slate-800 print:text-[9.8px] print:leading-[1.1]">
+                        <span className="block text-[15.2px] font-black leading-[1.18] text-slate-800 print:text-[10.3px] print:leading-[1.08]">
                           {row.label}
                         </span>
-                        <span className="mt-1 block text-[10.8px] font-bold leading-[1.32] text-slate-500 print:mt-0.5 print:text-[7.5px] print:leading-[1.12]">
+                        <span className="mt-1 block text-[11.4px] font-bold leading-[1.32] text-slate-500 print:mt-0.5 print:text-[8.1px] print:leading-[1.1]">
                           {row.helpText}
                         </span>
-                        <span className="mt-1 flex flex-wrap gap-x-2.5 gap-y-1 text-[12px] font-black leading-[1.25] text-slate-700 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[7.8px] print:leading-[1.1]">
+                        <span className="mt-1 flex flex-wrap gap-x-2.5 gap-y-1 text-[12.7px] font-black leading-[1.25] text-slate-700 print:mt-0.5 print:gap-x-1 print:gap-y-0 print:text-[8.3px] print:leading-[1.1]">
                           <span className="inline-flex items-center gap-1 print:gap-0.5">
-                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-mist-100 px-1 text-[11px] text-mist-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.1px]">
+                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-mist-100 px-1 text-[11.5px] text-mist-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.6px]">
                               低
                             </b>
                             <em className="not-italic text-[#26374c]">{row.lowGuide}</em>
                           </span>
                           <span className="inline-flex items-center gap-1 print:gap-0.5">
-                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-blossom-100 px-1 text-[11px] text-rose-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.1px]">
+                            <b className="inline-flex min-h-5 min-w-6 items-center justify-center rounded-full bg-blossom-100 px-1 text-[11.5px] text-rose-700 print:min-h-[14px] print:min-w-[18px] print:text-[7.6px]">
                               高
                             </b>
                             <em className="not-italic text-[#26374c]">{row.highGuide}</em>
@@ -533,7 +535,7 @@ export function ResultReport({ form }: ResultReportProps) {
           <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[12px]">今回のポイント</h2>
           <ul className="mt-3 space-y-2 print:mt-2 print:space-y-1">
             {keyPoints.map((point) => (
-              <li key={point} className="flex gap-2 text-sm leading-6 text-slate-600 print:text-[8px] print:leading-4">
+              <li key={point} className="flex gap-2 text-[13.5px] leading-[1.55] text-slate-600 print:text-[8.5px] print:leading-[1.12]">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#173865] print:mt-1 print:h-1.5 print:w-1.5" />
                 <span>{point}</span>
               </li>
@@ -548,7 +550,7 @@ export function ResultReport({ form }: ResultReportProps) {
           <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[12px]">今日からできるケア</h2>
           <ul className="mt-3 space-y-2 print:mt-2 print:space-y-1">
             {advice.map((item) => (
-              <li key={item} className="flex gap-2 text-sm leading-6 text-slate-600 print:text-[8px] print:leading-4">
+              <li key={item} className="flex gap-2 text-[13.5px] leading-[1.55] text-slate-600 print:text-[8.5px] print:leading-[1.12]">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#173865] print:mt-1 print:h-1.5 print:w-1.5" />
                 <span>{item}</span>
               </li>

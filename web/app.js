@@ -958,11 +958,13 @@ function renderDmftReference() {
       </div>
       <div class="dmft-chart-wrap">
         ${dmftReferenceSvg(reference, patientDmft)}
-        <div class="dmft-legend">
-          <span><i class="average"></i>全国平均</span>
-          <span><i class="patient"></i>今回のDMFT</span>
+        <div class="dmft-chart-meta">
+          <div class="dmft-legend">
+            <span><i class="average"></i>全国平均</span>
+            <span><i class="patient"></i>今回のDMFT</span>
+          </div>
+          <small class="dmft-source">出典: ${DMFT_REFERENCE_SOURCE}</small>
         </div>
-        <small>出典: ${DMFT_REFERENCE_SOURCE}</small>
       </div>
     </div>
   `;
