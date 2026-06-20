@@ -1394,8 +1394,8 @@ textarea:focus {
   position: relative;
   padding-left: 18px;
   color: #4d5f74;
-  font-size: 13.5px;
-  line-height: 1.55;
+  font-size: 14.4px;
+  line-height: 1.52;
 }
 
 .compact-list li::before {
@@ -1913,7 +1913,7 @@ textarea:focus {
 
   .compact-list li {
     padding-left: 2.8mm;
-    font-size: 6.35pt;
+    font-size: 6.65pt;
     line-height: 1.12;
   }
 

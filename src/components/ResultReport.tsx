@@ -535,7 +535,7 @@ export function ResultReport({ form }: ResultReportProps) {
           <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[12px]">今回のポイント</h2>
           <ul className="mt-3 space-y-2 print:mt-2 print:space-y-1">
             {keyPoints.map((point) => (
-              <li key={point} className="flex gap-2 text-[13.5px] leading-[1.55] text-slate-600 print:text-[8.5px] print:leading-[1.12]">
+              <li key={point} className="flex gap-2 text-[14.4px] leading-[1.52] text-slate-600 print:text-[8.85px] print:leading-[1.12]">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#173865] print:mt-1 print:h-1.5 print:w-1.5" />
                 <span>{point}</span>
               </li>
@@ -550,7 +550,7 @@ export function ResultReport({ form }: ResultReportProps) {
           <h2 className="mt-1 text-lg font-bold text-slate-900 print:text-[12px]">今日からできるケア</h2>
           <ul className="mt-3 space-y-2 print:mt-2 print:space-y-1">
             {advice.map((item) => (
-              <li key={item} className="flex gap-2 text-[13.5px] leading-[1.55] text-slate-600 print:text-[8.5px] print:leading-[1.12]">
+              <li key={item} className="flex gap-2 text-[14.4px] leading-[1.52] text-slate-600 print:text-[8.85px] print:leading-[1.12]">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#173865] print:mt-1 print:h-1.5 print:w-1.5" />
                 <span>{item}</span>
               </li>
