@@ -645,13 +645,14 @@ async function downloadPdfReport() {
     await waitForReportAssets(report);
 
     const printCss = printCssAsScreenCss();
+    const pdfPrintScale = printScaleForCurrentReport();
     const canvas = await window.html2canvas(report, {
       backgroundColor: "#ffffff",
       logging: false,
       scale: PDF_RENDER_SCALE,
       useCORS: true,
       onclone: (clonedDocument) => {
-        clonedDocument.documentElement.style.setProperty("--print-scale", "1");
+        clonedDocument.documentElement.style.setProperty("--print-scale", pdfPrintScale.toFixed(3));
         const style = clonedDocument.createElement("style");
         style.textContent = `
           ${printCss}
