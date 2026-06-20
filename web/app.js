@@ -12,6 +12,7 @@ const riskText = {
 
 const PRINT_FIT_BASE_HEIGHT = 2720;
 const PRINT_FIT_MIN_SCALE = 0.9;
+const PRINT_FIT_MAX_SCALE = 1.087;
 const DEFAULT_DOCUMENT_TITLE = document.title;
 const PDF_LIBRARY_URLS = {
   html2canvas: "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
@@ -509,13 +510,13 @@ function printScaleForCurrentReport() {
   const textLoad = guidanceTextLength() + Math.round(memoTextLength() * 0.55);
 
   const riskScale =
-    highCount >= 8 ? 0.98 : highCount >= 5 ? 0.99 : 1;
+    highCount >= 8 ? 1.04 : highCount >= 5 ? 1.065 : PRINT_FIT_MAX_SCALE;
   const textScale =
-    textLoad >= 1200 ? 0.9 : textLoad >= 900 ? 0.94 : textLoad >= 700 ? 0.97 : 1;
+    textLoad >= 1200 ? 0.9 : textLoad >= 900 ? 0.94 : textLoad >= 700 ? 0.99 : PRINT_FIT_MAX_SCALE;
 
   return Math.max(
     PRINT_FIT_MIN_SCALE,
-    Math.min(1, heightScale, riskScale, textScale)
+    Math.min(PRINT_FIT_MAX_SCALE, heightScale, riskScale, textScale)
   );
 }
 
